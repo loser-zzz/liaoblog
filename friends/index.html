@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <link rel="icon" href="../images/logo.jpg">
   
-  <title>搜索 | LiaoBlog</title>
+  <title>好伙伴们 | LiaoBlog</title>
   
   <meta name="author" content="John Doe" />
   <meta http-equiv="Cache-Control" content="no-transform" />
@@ -17,10 +17,12 @@
   
     <meta name="keywords" content="" />
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="搜索">
-<meta property="og:url" content="https://loser-zzz.github.io/liaoblog/search/index.html">
+  <meta name="description" content="好伙伴们在哪里~">
+<meta property="og:type" content="website">
+<meta property="og:title" content="好伙伴们">
+<meta property="og:url" content="https://loser-zzz.github.io/liaoblog/friends/index.html">
 <meta property="og:site_name" content="LiaoBlog">
+<meta property="og:description" content="好伙伴们在哪里~">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://loser-zzz.github.io/images/logo.jpg">
 <meta property="article:author" content="John Doe">
@@ -182,34 +184,39 @@
 
         
 
-            <div class="kratos-hentry kratos-post-inner clearfix">
-    <div class="kratos-post-content">
-        <h2 class="title-h2 text-center">搜索</h2>
-        <form class="input-group" onsubmit="return inpSearch();">
-            <input class="form-input input-lg" id="search-input" maxlength="80" name="s" placeholder="有什么想找找看的呢o(*￣▽￣*)ブ" required type="search">
-            <button class="btn btn-primary" type="submit">找一找~</button>
-        </form>
-    </div>
-</div>
-
-<div class="alert alert-info" id="kr-search-notice">
-    这里是 LiaoBlog 的搜索引擎~
-</div>
-
-<div id="result-posts">
+            <article itemscope itemtype="https://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <div class="kratos-post-content">
-            <p>搜索多个关键词时请用空格分割，例如「」这样；</p>
-            <p>您也可以使用这些标签碰碰运气哦~</p>
-            <p class="search-demo-tags">
-                
-            </p>
-        </div>
-    </div>
+            <h2 class="title-h2 text-center" itemprop="name headline">好伙伴们</h2>
+            <div itemprop="articleBody"><div class="linkpage">
+    <ul id="friendsList"></ul>
 </div>
 
-<script>var searchDataFile = "/liaoblog/search.json";</script>
-<script defer src="/liaoblog/js/local-search.min.js"></script>
+<script type="text/javascript">
+{
+    const flist = [{"name":"猫猫①号","link":"https://candinya.com","avatar":"../images/avatar.webp","bio":"喵~"},{"name":"猫猫②号","link":"https://candinya.com","avatar":"../images/avatar.webp","bio":"喵喵~"},{"name":"猫猫⑨号","link":"https://candinya.com","avatar":"../images/avatar.webp","bio":"咪啪~"}];
+    let friendNodes = '';
+    while (flist.length > 0) {
+        const rndNum = Math.floor(Math.random()*flist.length);
+        friendNodes += `<li><a target="_blank" href="${flist[rndNum].link}"><img src="${flist[rndNum].avatar}" onerror="this.src='/liaoblog/images/avatar.webp';this.onerror=null;"><h4>${flist[rndNum].name}</h4><p>${flist[rndNum].bio}</p></a></li>`;
+        flist.splice(rndNum, 1);
+    }
+    document.getElementById("friendsList").innerHTML = friendNodes;
+}
+</script></div>
+        </div>
+        <footer class="kratos-entry-footer clearfix">
+            <div class="footer-tag clearfix">
+                <div class="pull-date">
+                    <time datetime="2021-01-18T00:00:00.000Z" itemprop="dateModified">最后编辑：2021-01-18</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    
+</article>
 
         
 
