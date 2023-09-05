@@ -167,311 +167,6 @@
                 <div class="kratos-status-inner">
                     <div class="kratos-status-content" itemprop="articleBody">
                         
-                            <h1 id="JMeter使用-简单测试篇"><a href="#JMeter使用-简单测试篇" class="headerlink" title="JMeter使用-简单测试篇"></a>JMeter使用-简单测试篇</h1><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>添加线程组，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-1.png" alt="这是图片"></p>
-</li>
-<li><p>线程组可以配置线程数，准备时长等参数，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-2.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>线程数：虚拟用户数，一个用户占用一个进程或线程。</li>
-<li>Ramp-Up Period(in seconds)准备时长：设置的虚拟用户数需要多长时间全部启动。如果线程数为10，准备时长为2，那么需要2秒钟启动10个线程，也就是每秒钟启动5个线程。</li>
-<li>循环次数：每个线程发送请求的次数。如果线程数为10，循环次数为100，那么每个线程发送100次请求。总请求数为10*100&#x3D;1000 。如果勾选了“永远”，那么所有线程会一直发送请求，一到选择停止运行脚本。</li>
-<li>调度器：设置线程组启动的持续时间和启动延时时间。</li>
-</ul>
-</li>
-<li><p>添加http，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-3.png" alt="这是图片"></p>
-</li>
-<li><p>设置http请求，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-4.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>协议：这里设置http&#x2F;https&#x2F;tcp等，根据自己需要填写。</li>
-<li>服务器名：这里填写的是域名或ip。</li>
-<li>端口号：这里默认80端口。</li>
-<li>http请求方法：get，post，put，delete等都在这里设置。</li>
-<li>路径：比如你请求接口的路径，不要加域名了。</li>
-<li>内容编码：设置utf-8。</li>
-<li>参数：这里可以设置你提交的参数 postman怎么用，这里也差不多。切记一点，提交中文的话一定要编码，在编码列打钩√。</li>
-</ul>
-</li>
-<li><p>添加观察结果树，可以查看每次http请求之后返回的结果，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-5.png" alt="这是图片"><br> <img src="/liaoblog/jmeter-use-6.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>text栏目：这里查看请求。</li>
-<li>取样器结果：这里显示请求后的返回结果。</li>
-</ul>
-</li>
-<li><p>添加聚合报告，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-7.png" alt="这是图片"><br> <img src="/liaoblog/jmeter-use-8.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>Label：http请求都有一个 Name 属性，这里显示的就是 Name 属性的值。</li>
-<li>样本（#Samples）：请求数——表示这次测试中一共发出了多少个请求，如果模拟10个用户，每个用户迭代10次，那么这里显示100。</li>
-<li>平均数（Average）：平均响应时间——默认情况下是单个 Request 的平均响应时间，当使用了 Transaction Controller 时，以Transaction 为单位显示平均响应时间。</li>
-<li>中位数（Median）： 50％ 用户的响应时间。</li>
-<li>90%百分位（90% Line）：90％ 用户的响应时间。以此类推95%，99%。</li>
-<li>最小值（Min）：最小响应时间。</li>
-<li>最大值（Max）：最大响应时间。</li>
-<li>异常（Error%）：错误请求数&#x2F;请求总数。</li>
-<li>吞吐量（Throughput）：默认情况下表示每秒完成的请求数（Request per Second），当使用了 Transaction Controller 时，也可以表示类似 LoadRunner 的 Transaction per Second 数。</li>
-<li>重点关注：1. Samples 请求数 2. Average 平均响应时间 3.Min 最小响应时间 4.Max 最大响应时间 5.Error% 异常率 6.Throughput 吞吐量。</li>
-</ul>
-</li>
-<li><p>开始测试，如下图:</p>
-<p><img src="/liaoblog/jmeter-use-9.png" alt="这是图片"><br><img src="/liaoblog/jmeter-use-10.png" alt="这是图片"><br><img src="/liaoblog/jmeter-use-11.png" alt="这是图片"></p>
-</li>
-<li><p>简单测试到这里就结束了。有两个功能没有描述，我测试的是短信接口：</p>
-<ul>
-<li>用户常量：顾明思义，用于测试不同的接口里面所需要的同一变量，比如user_id &#x3D;1 ，在查询用户资料或查询积分都会用上，为了避免重复填写或者改写多次。</li>
-<li>断言：用于检查测试中得到的响应数据等是否符合预期，用以保证性能测试过程中的数据交互与预期一致。</li>
-</ul>
-</li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:27.060Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95%E7%AF%87/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="JMeter使用-安装篇"><a href="#JMeter使用-安装篇" class="headerlink" title="JMeter使用-安装篇"></a>JMeter使用-安装篇</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  想起早期面试的时候，被人问到压力测试工具，回答到apache自带的ab工具还有java的JMeter。但实际上，我用的也少。特此记录一下。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>先安装java的jdk,按照JMeter官网的说法，只能支持java8+的：<a target="_blank" rel="noopener" href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">官方下载</a></p>
-</li>
-<li><p>如下图（可能要注册一个账号，因为我下载的时候要求登录）：</p>
-<p> <img src="/liaoblog/jmeter-install-1.png" alt="这是图片"></p>
-</li>
-<li><p>jdk在下载挺大的，接着下载最新的JMeter:<a target="_blank" rel="noopener" href="http://jmeter.apache.org/download_jmeter.cgi">官方下载</a></p>
-<p> <img src="/liaoblog/jmeter-install-2.png" alt="这是图片"></p>
-</li>
-<li><p>4.java的jdk下载好就安装，傻瓜包，安装好之后查看是否配置了环境变量。cmd输入以下命令：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java –version</span><br></pre></td></tr></table></figure>
-<p> <img src="/liaoblog/jmeter-install-3.png" alt="这是图片"></p>
-</li>
-<li><p>JMeter压缩包下载好后解压，找到bin目录下面的jmeter.bat文件。</p>
-<p> <img src="/liaoblog/jmeter-install-4.png" alt="这是图片"></p>
-</li>
-<li><p>打开jmeter.bat文件，然后按照一下步骤设置中文版：</p>
-<p> <img src="/liaoblog/jmeter-install-5.png" alt="这是图片"></p>
-</li>
-<li><p>这里就安装结束了。</p>
-<p> <img src="/liaoblog/jmeter-install-6.png" alt="这是图片"></p>
-</li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:27.053Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E5%AE%89%E8%A3%85%E7%AF%87/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="ElasticSearch的windows基本安装运行"><a href="#ElasticSearch的windows基本安装运行" class="headerlink" title="ElasticSearch的windows基本安装运行"></a>ElasticSearch的windows基本安装运行</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  有些时候会遇到这么一个需求，就是一个搜索栏，需要能搜索出名称，地址，类型各式各样的关联数据，这个时候比较菜鸡的做法就是在搜索栏上面做一个分类选择，然后选择判断去做模糊搜索，要么就是直接名称OR地址OR类型模塑搜索，这个时候就很骚了。<br>  早之前在技术群里面和博客里面有了解过ElasticSearch的大名，然而没有时间去实践到自己的项目里面，抽空开始搭建ElasticSearch的环境，了解的差不多就开始合并到项目里面去实践。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>由于ElasticSearch（下面简称es）是java写的所以会依赖java的环境，java的jdk需要8或以上。</p>
-</li>
-<li><p>下载es的安装包：<a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/elasticsearch">ElasticSearch官网</a></p>
-</li>
-<li><p>选择合适的环境包，比如我是window的环境：</p>
-<p> <img src="/liaoblog/ElasticSearch-Install-1.png" alt="这是图片"></p>
-</li>
-<li><p>正常起仓库名，不用xxx.github.io，访问的时候比较难看，而且下面创建博客建议使用同一个名字，比如blogName。</p>
-</li>
-<li><p>然后选择一个盘，解压出来：</p>
-<p> <img src="/liaoblog/ElasticSearch-Install-2.png" alt="这是图片"></p>
-</li>
-<li><p>进入bin目录，找到elasticsearch.bat文件，双击运行：</p>
-<p> <img src="/liaoblog/ElasticSearch-Install-3.png" alt="这是图片"></p>
-</li>
-<li><p>运行成功后：访问127.0.0.0:9200，然后出现以下数据就是运行成功了。</p>
-<p> <img src="/liaoblog/ElasticSearch-Install-4.png" alt="这是图片"></p>
-</li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.937Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/ElasticSearch%E7%9A%84windows%E5%9F%BA%E6%9C%AC%E5%AE%89%E8%A3%85%E8%BF%90%E8%A1%8C/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="ElasticSearch在PHP中使用"><a href="#ElasticSearch在PHP中使用" class="headerlink" title="ElasticSearch在PHP中使用"></a>ElasticSearch在PHP中使用</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  我测试用的例子是laravel6.0框架。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>配置composer.json文件：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">       &quot;require&quot; : &#123;</span><br><span class="line">           &quot;elasticsearch/elasticsearch&quot;: &quot;~6.0&quot;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>用composer进行安装：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer update elasticsearch/elasticsearch</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装完之后，随便新建一个控制，比如说index控制器，引入类库：</p>
- <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Elasticsearch</span>\<span class="title">ClientBuilder</span>;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>新建一个index方法，并在里面实例化客户端：</p>
- <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>实例化完了，那就说说elasticsearch吧，es呢和数据库类似，所以一样会有增删查改的操作。</p>
-</li>
-<li><p>简单的示例代码：</p>
- <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	</span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Http</span>\<span class="title class_">Controllers</span>\<span class="title class_">Index</span>;</span><br><span class="line">	</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Elasticsearch</span>\<span class="title">ClientBuilder</span>;</span><br><span class="line">	</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;   </span><br><span class="line">    <span class="comment">//查询一条记录</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getone</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">        <span class="variable">$params</span> = [</span><br><span class="line">            <span class="string">&#x27;index&#x27;</span> =&gt; <span class="string">&#x27;test_indexs&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;type&#x27;</span> =&gt; <span class="string">&#x27;txt&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;id&#x27;</span> =&gt; <span class="string">&#x27;my_id&#x27;</span></span><br><span class="line">        ];</span><br><span class="line">        <span class="variable">$response</span> = <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$params</span>);</span><br><span class="line">        <span class="title function_ invoke__">dd</span>(<span class="variable">$response</span>);</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//简单模糊搜索（多个数据）</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">search</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$search</span>=<span class="string">&#x27;标题&#x27;</span>;</span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">        <span class="variable">$params</span> = [</span><br><span class="line">            <span class="string">&#x27;index&#x27;</span> =&gt; <span class="string">&#x27;test_indexs&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;type&#x27;</span> =&gt; <span class="string">&#x27;txt&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;body&#x27;</span> =&gt; [</span><br><span class="line">                <span class="string">&#x27;query&#x27;</span> =&gt; [</span><br><span class="line">                    <span class="string">&#x27;match&#x27;</span> =&gt; [<span class="comment">//模糊查询 需要精确查询的话 请参考https://www.elastic.co/guide/cn/elasticsearch/guide/2.x/_finding_exact_values.html 这一章节的内容</span></span><br><span class="line">                        <span class="string">&#x27;title&#x27;</span> =&gt; <span class="variable">$search</span>,<span class="comment">//标题</span></span><br><span class="line">                    ]</span><br><span class="line">                ]</span><br><span class="line">            ]</span><br><span class="line">        ];</span><br><span class="line">        <span class="variable">$response</span> = <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">search</span>(<span class="variable">$params</span>);</span><br><span class="line">        <span class="title function_ invoke__">dd</span>(<span class="variable">$response</span>);</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//添加单个数据或编辑</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">        <span class="variable">$params</span> = [</span><br><span class="line">            <span class="string">&#x27;index&#x27;</span> =&gt;<span class="string">&#x27;test_indexs&#x27;</span>,<span class="comment">//索引 =&gt; 表</span></span><br><span class="line">            <span class="string">&#x27;type&#x27;</span> =&gt; <span class="string">&#x27;txt&#x27;</span>,<span class="comment">//数据类型 =&gt; 分类索引</span></span><br><span class="line">            <span class="string">&#x27;id&#x27;</span> =&gt; <span class="string">&#x27;my_id&#x27;</span>,<span class="comment">//主键</span></span><br><span class="line">            <span class="string">&#x27;body&#x27;</span> =&gt; [</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span> =&gt; <span class="string">&#x27;标题&#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">                <span class="string">&#x27;content&#x27;</span> =&gt; <span class="string">&#x27;内容&#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">                <span class="string">&#x27;date&#x27;</span> =&gt; <span class="string">&#x27;2020-08-01 &#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">            ],</span><br><span class="line">        ];</span><br><span class="line">	</span><br><span class="line">        <span class="variable">$response</span> = <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">index</span>(<span class="variable">$params</span>);</span><br><span class="line">        <span class="title function_ invoke__">dd</span>(<span class="variable">$response</span>);</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//添加多个数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">adds</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">        <span class="variable">$params</span> = [];</span><br><span class="line">        <span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">1</span>; <span class="variable">$i</span> &lt; <span class="number">21</span>; <span class="variable">$i</span>++) &#123;  </span><br><span class="line">            <span class="variable">$params</span>[<span class="string">&#x27;body&#x27;</span>][] = [</span><br><span class="line">                <span class="string">&#x27;index&#x27;</span> =&gt; [</span><br><span class="line">                    <span class="string">&#x27;_index&#x27;</span> =&gt; <span class="string">&#x27;test_indexs&#x27;</span>,<span class="comment">//索引 =&gt; 表</span></span><br><span class="line">                    <span class="string">&#x27;_type&#x27;</span>  =&gt; <span class="string">&#x27;txt&#x27;</span>,<span class="comment">//数据类型 =&gt; 分类索引</span></span><br><span class="line">                    <span class="string">&#x27;_id&#x27;</span>    =&gt; <span class="variable">$i</span>,<span class="comment">//主键</span></span><br><span class="line">                ]</span><br><span class="line">            ];</span><br><span class="line">            <span class="variable">$params</span>[<span class="string">&#x27;body&#x27;</span>][] = [  </span><br><span class="line">                <span class="string">&#x27;title&#x27;</span> =&gt; <span class="string">&#x27;标题&#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">                <span class="string">&#x27;content&#x27;</span> =&gt; <span class="string">&#x27;内容&#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">                <span class="string">&#x27;date&#x27;</span> =&gt; <span class="string">&#x27;2020-08-01 &#x27;</span>.<span class="title function_ invoke__">mt_rand</span>(<span class="number">1</span>,<span class="number">1000</span>),</span><br><span class="line">            ];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$response</span> = <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">bulk</span>(<span class="variable">$params</span>);</span><br><span class="line">        <span class="title function_ invoke__">dd</span>(<span class="variable">$response</span>);</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$response</span>;  </span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//删除单个数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">del</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">	</span><br><span class="line">        <span class="variable">$params</span> = [];  </span><br><span class="line">        <span class="variable">$params</span>[<span class="string">&#x27;index&#x27;</span>] = <span class="string">&#x27;test_indexs&#x27;</span>;</span><br><span class="line">        <span class="variable">$params</span>[<span class="string">&#x27;type&#x27;</span>] = <span class="string">&#x27;text&#x27;</span>;</span><br><span class="line">        <span class="variable">$params</span>[<span class="string">&#x27;id&#x27;</span>] = <span class="string">&#x27;my_id&#x27;</span>;</span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">delete</span>(<span class="variable">$params</span>);  </span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//删除索引（会包括里面的数据全部删除）</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dels</span>(<span class="params">Request <span class="variable">$request</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;   </span><br><span class="line">        <span class="variable">$client</span> = <span class="title class_">ClientBuilder</span>::<span class="title function_ invoke__">create</span>()-&gt;<span class="title function_ invoke__">build</span>();</span><br><span class="line">	</span><br><span class="line">        <span class="variable">$params</span> = [];  </span><br><span class="line">        <span class="variable">$params</span>[<span class="string">&#x27;index&#x27;</span>] = <span class="string">&#x27;test_indexs&#x27;</span>;  </span><br><span class="line">	</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$client</span>-&gt;<span class="title function_ invoke__">indices</span>()-&gt;<span class="title function_ invoke__">delete</span>(<span class="variable">$params</span>);  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>  大致上的操作就是这样了，复杂的查询操作需要认真去看 <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/cn/elasticsearch/guide/2.x/search-in-depth.html">深入搜索</a> 这一章节。</p>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.932Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/ElasticSearch%E5%9C%A8PHP%E4%B8%AD%E4%BD%BF%E7%94%A8/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
                             <h1 id="Laravel-PHPUnit学习记录"><a href="#Laravel-PHPUnit学习记录" class="headerlink" title="Laravel+PHPUnit学习记录"></a>Laravel+PHPUnit学习记录</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  参考资料：<br>    - <a target="_blank" rel="noopener" href="https://learnku.com/laravel/t/22814">Laravel教程</a><br>    - 文章里面部分函数例如: visit()，see()，高版本已废弃，高版本函数请参考：<a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel/6.x/http-tests/5183#5d75bd">Laravel文档</a><br>    - <a target="_blank" rel="noopener" href="https://phpunit.readthedocs.io/zh_CN/latest/index.html">PHPUnit中文网</a></p>
 <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
 <li><p>使用的Laravel6.0进行的测试，自带PHPUnit，注意:</p>
@@ -938,6 +633,312 @@
         </article>
     
 
+    
+    
+        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-status">
+                
+                    <i class="fa fa-refresh"></i>
+                
+                <div class="kratos-status-inner">
+                    <div class="kratos-status-content" itemprop="articleBody">
+                        
+                            <h1 id="Centos7-6安装oniguruma"><a href="#Centos7-6安装oniguruma" class="headerlink" title="Centos7.6安装oniguruma"></a>Centos7.6安装oniguruma</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  为啥要安装oniguruma，是因为PHP7.4.x中mbstring的正则表达式功能需要oniguruma。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>执行以下代码：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget https://github.com/kkos/oniguruma/archive/v6.9.4.tar.gz -O oniguruma-6.9.4.tar.gz </span><br><span class="line">tar -zxvf oniguruma-6.9.4.tar.gz</span><br><span class="line">cd oniguruma-6.9.4/</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --libdir=/lib64</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>根据小网站的提示，configure必须要有“–libdir&#x3D;&#x2F;lib64”这个参数，不然编译php7.4.x的时候一定会报No package ‘oniguruma’ found。当然除非你编译PHP的时候不使用mbstring的功能。</p>
+</li>
+</ol>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>  找挺久的一个资料，虽然广大网友也遇到了这个问题，但是终究没有试出一个合适的方案，翻了很久终于在一个小网站里面找到了。</p>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-09-05T14:02:26.749Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
+                        </time>
+                        
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    
+                    
+                        <span class="pull-right">
+                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%AE%89%E8%A3%85oniguruma/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
+                        </span>
+                    
+
+                </footer>
+            
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-status">
+                
+                    <i class="fa fa-refresh"></i>
+                
+                <div class="kratos-status-inner">
+                    <div class="kratos-status-content" itemprop="articleBody">
+                        
+                            <h1 id="Centos7-6升级gcc"><a href="#Centos7-6升级gcc" class="headerlink" title="Centos7.6升级gcc"></a>Centos7.6升级gcc</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  mysql8需要，升级gcc。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>安装依赖：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install bzip2 flex</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入源码目录：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载源码包：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压文件：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf gcc-8.3.0.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入解压的文件夹：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd gcc-8.3.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继续安装依赖：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./contrib/download_prerequisites</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行命令后它会自动下载mpfr、gmp、mpc isl这4个库。</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd blogName</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建立一个文件夹：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入文件夹：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd build</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/usr/local/gcc --enable-languages=c,c++ --disable-multilib</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译和安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除旧版本的gcc：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove gcc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建软连接：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/gcc/bin/gcc /usr/bin/gcc</span><br><span class="line">ln -s /usr/local/gcc/bin/g++ /usr/bin/g++</span><br></pre></td></tr></table></figure></li>
+<li><p>查看版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc –v</span><br><span class="line">g++ -v</span><br></pre></td></tr></table></figure>
+<p><img src="/liaoblog/centos-gcc-1.png" alt="这是图片"><br><img src="/liaoblog/centos-gcc-2.png" alt="这是图片"></p>
+</li>
+<li><p>就这样完成了？不，你错了，还有一个叫动态库的东西，版本更新了，但是动态库不一定更新了。是不是很惊喜（我更新完就去编译mysql了，然后炸了，丢）。</p>
+</li>
+<li><p>这里就不做是否动态库更新的判断了，直接就当做动态库没有更新。</p>
+</li>
+<li><p>查询gcc的安装路径:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name &quot;libstdc++.so*&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入操作目录:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib64/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制安装好的gcc文件到操作目录:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/gcc/lib64/libstdc++.so.6.0.25 /usr/lib64/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除旧的软连接，怕删错就拷贝一份做备份:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf libstdc++.so.6</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加软连接:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s libstdc++.so.6.0.25 libstdc++.so.6</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>到这一步才是安装完成。</p>
+</li>
+</ol>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-09-05T14:02:26.743Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
+                        </time>
+                        
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    
+                    
+                        <span class="pull-right">
+                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%8D%87%E7%BA%A7gcc/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
+                        </span>
+                    
+
+                </footer>
+            
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-status">
+                
+                    <i class="fa fa-refresh"></i>
+                
+                <div class="kratos-status-inner">
+                    <div class="kratos-status-content" itemprop="articleBody">
+                        
+                            <h1 id="Centos7-6升级cmake"><a href="#Centos7-6升级cmake" class="headerlink" title="Centos7.6升级cmake"></a>Centos7.6升级cmake</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  由于要手动编译mysql8，需要高版本的cmake，不得不更新cmake。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>进入src目录，执行以下命令：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载源码包：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压源码包：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf cmake-3.13.2.tar.gz</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入解压后的文件夹：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd  /usr/local/src/cmake-3.13.2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开始配置(–prefix 指定安装目录)：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bootstrap --prefix=/usr/local/cmake</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置完就开始编译安装：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果是系统有自带的cmake，就要删除，已删除过的请忽略：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove cmake -y</span><br></pre></td></tr></table></figure></li>
+<li><p>安装完创建命令的软连接：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/cmake/bin/cmake /usr/bin/cmake</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行版本的命令：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake --version</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>出现如下就是成功了：</p>
+<p><img src="/liaoblog/centos-cmake.png" alt="这是图片"></p>
+</li>
+</ol>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-09-05T14:02:26.737Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
+                        </time>
+                        
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    
+                    
+                        <span class="pull-right">
+                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%8D%87%E7%BA%A7cmake/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
+                        </span>
+                    
+
+                </footer>
+            
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-status">
+                
+                    <i class="fa fa-refresh"></i>
+                
+                <div class="kratos-status-inner">
+                    <div class="kratos-status-content" itemprop="articleBody">
+                        
+                            <h1 id="Centos7-6下的Mysql8-0-20编译错误合集"><a href="#Centos7-6下的Mysql8-0-20编译错误合集" class="headerlink" title="Centos7.6下的Mysql8.0.20编译错误合集"></a>Centos7.6下的Mysql8.0.20编译错误合集</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  搭建mysql8.0.20遇见的问题点汇总。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>错误：‘SYS_gettid’：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc: 在函数‘void buf_pool_create(buf_pool_t*, ulint, ulint, std::mutex*, dberr_t&amp;)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 错误：‘SYS_gettid’在此作用域中尚未声明</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 附注：suggested alternative: ‘my_getwd’</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">                                           my_getwd</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/buf/buf0buf.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
+
+<p> <img src="/liaoblog/centos-mysql-error-1.png" alt="这是图片"></p>
+</li>
+<li><p>解决方案：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc</span><br></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include <span class="string">&quot;sys/syscall.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>错误：‘os_compare_and_swap_thread_id’ 注意：文件名是lock0lock.cc:</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	  /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc: 在函数‘void lock_mark_trx_for_rollback(hit_list_t&amp;, trx_id_t, trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 附注：suggested alternative: ‘os_compare_and_swap_uint64’</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">         os_compare_and_swap_uint64</span><br><span class="line">	make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/lock/lock0lock.cc.o] 错误 1</span><br><span class="line">	make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">	make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
+<p> <img src="/liaoblog/centos-mysql-error-2.png" alt="这是图片"></p>
+</li>
+<li><p>解决方案：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc</span><br></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将 “os_compare_and_swap_thread_id” 修改为</span></span><br><span class="line">os_compare_and_swap_lint</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>错误：‘os_compare_and_swap_thread_id’注意：文件名是trx0trx.cc：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_init(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_kill_blocking(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/trx/trx0trx.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
+<p> <img src="/liaoblog/centos-mysql-error-3.png" alt="这是图片"></p>
+</li>
+<li><p>解决方案：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc</span><br></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将 “os_compare_and_swap_thread_id” 修改为</span></span><br><span class="line">os_compare_and_swap_lint</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+                        
+                    </div>
+                </div>
+            </div>
+            
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-09-05T14:02:26.732Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
+                        </time>
+                        
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    
+                    
+                        <span class="pull-right">
+                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E4%B8%8B%E7%9A%84Mysql8.0.20%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF%E5%90%88%E9%9B%86/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
+                        </span>
+                    
+
+                </footer>
+            
+        </article>
+    
+
 
 
     <div class='text-center pagination'>
@@ -984,7 +985,7 @@
                 文章
             </span>
             <span class="count">
-                17
+                14
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/categories/">
@@ -992,7 +993,7 @@
                 分类
             </span>
             <span class="count">
-                0
+                1
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/tags/">
@@ -1000,16 +1001,28 @@
                 标签
             </span>
             <span class="count">
-                0
+                2
             </span>
         </a>
     </div>
 </aside>
             
                 
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/liaoblog/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li></ul>
+  </aside>
+
 
             
                 
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/liaoblog/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/liaoblog/tags/apache/" style="font-size: 0.6em;">apache</a>
+      </div>
+  </aside>
+
             
                 
   <aside id="krw-posts" class="widget widget-kratos-posts">
@@ -1059,14 +1072,8 @@
         
           
           
-        
-          
-          
-        
-          
-          
-        
-          
+            <a class="list-group-item" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa  fa-book"></i> Apache自带的ab压力测试工具使用</a>
+            
           
         
       </ul>

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <link rel="icon" href="../images/logo.jpg">
   
-  <title>查看动态 | 生命是一场无法回放的电影</title>
+  <title>Apache自带的ab压力测试工具使用 | 生命是一场无法回放的电影</title>
   
   <meta name="author" content="Liao" />
   <meta http-equiv="Cache-Control" content="no-transform" />
@@ -15,19 +15,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="" />
+    <meta name="keywords" content="ab, apache" />
   
-  <meta name="description" content="JMeter使用-简单测试篇步骤 添加线程组，如下图：    线程组可以配置线程数，准备时长等参数，如下图：    参数详解：  线程数：虚拟用户数，一个用户占用一个进程或线程。 Ramp-Up Period(in seconds)准备时长：设置的虚拟用户数需要多长时间全部启动。如果线程数为10，准备时长为2，那么需要2秒钟启动10个线程，也就是每秒钟启动5个线程。 循环次数：每个线程发送请求的次">
+  <meta name="description" content="Apache自带的ab压力测试工具使用步骤 ab是Apache自带的压力测试工具，用于测试站点的承受能力，原名Apache Bench。  ab的原理是：创建多个并发进程，模拟多个用户同时对同一个目标网址发起访问。  使用方式，找到Apache的安装目录，有个bin文件夹，里面有一个ab.exe文件。比如我使用的phpstudy8.0。    在windows的命令行下(cmd)运行ab.exe，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="查看动态">
-<meta property="og:url" content="https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95%E7%AF%87/index.html">
+<meta property="og:title" content="Apache自带的ab压力测试工具使用">
+<meta property="og:url" content="https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="生命是一场无法回放的电影">
-<meta property="og:description" content="JMeter使用-简单测试篇步骤 添加线程组，如下图：    线程组可以配置线程数，准备时长等参数，如下图：    参数详解：  线程数：虚拟用户数，一个用户占用一个进程或线程。 Ramp-Up Period(in seconds)准备时长：设置的虚拟用户数需要多长时间全部启动。如果线程数为10，准备时长为2，那么需要2秒钟启动10个线程，也就是每秒钟启动5个线程。 循环次数：每个线程发送请求的次">
+<meta property="og:description" content="Apache自带的ab压力测试工具使用步骤 ab是Apache自带的压力测试工具，用于测试站点的承受能力，原名Apache Bench。  ab的原理是：创建多个并发进程，模拟多个用户同时对同一个目标网址发起访问。  使用方式，找到Apache的安装目录，有个bin文件夹，里面有一个ab.exe文件。比如我使用的phpstudy8.0。    在windows的命令行下(cmd)运行ab.exe，">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://loser-zzz.github.io/images/logo.jpg">
-<meta property="article:published_time" content="2023-09-05T14:02:27.060Z">
-<meta property="article:modified_time" content="2023-09-05T14:00:24.022Z">
+<meta property="article:published_time" content="2023-09-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-09-05T15:01:36.404Z">
 <meta property="article:author" content="Liao">
+<meta property="article:tag" content="apache">
+<meta property="article:tag" content="ab">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://loser-zzz.github.io/images/logo.jpg">
   
@@ -158,13 +160,15 @@
 
             <article itemscope itemtype="https://schema.org/Article">
     
-    <link itemprop="mainEntityOfPage" href="https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95%E7%AF%87/">
+    <link itemprop="mainEntityOfPage" href="https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/">
     <div class="kratos-hentry kratos-post-inner clearfix">
         <header class="kratos-entry-header">
             
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">Apache自带的ab压力测试工具使用</h1>
+            
             
             <ul class="kratos-post-meta text-center">
-                <li><time datetime="2023-09-05T14:02:27.060Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-09-05</time></li>
+                <li><time datetime="2023-09-04T16:00:00.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-09-05</time></li>
                 <li itemprop="author" itemscope itemtype="https://schema.org/Person">
                     <i class="fa fa-user"></i> 作者 <span itemprop="name">Liao</span>
                 </li>
@@ -173,7 +177,7 @@
                         <i class="fa fa-edit"></i> 
                         
                         
-                            1422
+                            915
                         
                         字
                     </li>
@@ -183,77 +187,63 @@
         </header>
         <div class="kratos-post-content">
             
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1693926096404"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
             
             
             <hr />
-            <div itemprop="articleBody"><h1 id="JMeter使用-简单测试篇"><a href="#JMeter使用-简单测试篇" class="headerlink" title="JMeter使用-简单测试篇"></a>JMeter使用-简单测试篇</h1><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>添加线程组，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-1.png" alt="这是图片"></p>
+            <div itemprop="articleBody"><h1 id="Apache自带的ab压力测试工具使用"><a href="#Apache自带的ab压力测试工具使用" class="headerlink" title="Apache自带的ab压力测试工具使用"></a>Apache自带的ab压力测试工具使用</h1><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>ab是Apache自带的压力测试工具，用于测试站点的承受能力，原名Apache Bench。</p>
 </li>
-<li><p>线程组可以配置线程数，准备时长等参数，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-2.png" alt="这是图片"></p>
+<li><p>ab的原理是：创建多个并发进程，模拟多个用户同时对同一个目标网址发起访问。</p>
 </li>
-<li><p>参数详解：</p>
+<li><p>使用方式，找到Apache的安装目录，有个bin文件夹，里面有一个ab.exe文件。比如我使用的phpstudy8.0。</p>
+<p> <img src="/liaoblog/../../images/article/miscellaneous/ab-1.png" alt="这是图片"></p>
+</li>
+<li><p>在windows的命令行下(cmd)运行ab.exe，注意:直接双击ab.exe是无效的。</p>
+</li>
+<li><p>先打开cmd,比如以下快捷进入。</p>
+<p> <img src="/liaoblog/../../images/article/miscellaneous/ab-2.png" alt="这是图片"><br> <img src="/liaoblog/../../images/article/miscellaneous/ab-3.png" alt="这是图片"></p>
+</li>
+<li><p>运行以下命令：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>会出现如下的帮助界面：</p>
+<p> <img src="/liaoblog/../../images/article/miscellaneous/ab-4.png" alt="这是图片"></p>
+</li>
+<li><p>红框中的是 ab的使用格式，例如(注意链接一定要&#x2F;结尾)：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 1000 -c 100 http://www.baidu.com/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ab常用参数说明：</p>
 <ul>
-<li>线程数：虚拟用户数，一个用户占用一个进程或线程。</li>
-<li>Ramp-Up Period(in seconds)准备时长：设置的虚拟用户数需要多长时间全部启动。如果线程数为10，准备时长为2，那么需要2秒钟启动10个线程，也就是每秒钟启动5个线程。</li>
-<li>循环次数：每个线程发送请求的次数。如果线程数为10，循环次数为100，那么每个线程发送100次请求。总请求数为10*100&#x3D;1000 。如果勾选了“永远”，那么所有线程会一直发送请求，一到选择停止运行脚本。</li>
-<li>调度器：设置线程组启动的持续时间和启动延时时间。</li>
+<li>-n ：总共的请求执行数；</li>
+<li>-c： 并发数，缺省是1；</li>
+<li>-t：测试所进行的总时间，秒为单位</li>
+<li>-p：POST时的数据</li>
+<li>-w: 以HTML表的格式输出结果</li>
 </ul>
 </li>
-<li><p>添加http，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-3.png" alt="这是图片"></p>
+<li><p>ab测试例子：</p>
 </li>
-<li><p>设置http请求，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-4.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>协议：这里设置http&#x2F;https&#x2F;tcp等，根据自己需要填写。</li>
-<li>服务器名：这里填写的是域名或ip。</li>
-<li>端口号：这里默认80端口。</li>
-<li>http请求方法：get，post，put，delete等都在这里设置。</li>
-<li>路径：比如你请求接口的路径，不要加域名了。</li>
-<li>内容编码：设置utf-8。</li>
-<li>参数：这里可以设置你提交的参数 postman怎么用，这里也差不多。切记一点，提交中文的话一定要编码，在编码列打钩√。</li>
-</ul>
-</li>
-<li><p>添加观察结果树，可以查看每次http请求之后返回的结果，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-5.png" alt="这是图片"><br> <img src="/liaoblog/jmeter-use-6.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>text栏目：这里查看请求。</li>
-<li>取样器结果：这里显示请求后的返回结果。</li>
-</ul>
-</li>
-<li><p>添加聚合报告，如下图：</p>
-<p> <img src="/liaoblog/jmeter-use-7.png" alt="这是图片"><br> <img src="/liaoblog/jmeter-use-8.png" alt="这是图片"></p>
-</li>
-<li><p>参数详解：</p>
-<ul>
-<li>Label：http请求都有一个 Name 属性，这里显示的就是 Name 属性的值。</li>
-<li>样本（#Samples）：请求数——表示这次测试中一共发出了多少个请求，如果模拟10个用户，每个用户迭代10次，那么这里显示100。</li>
-<li>平均数（Average）：平均响应时间——默认情况下是单个 Request 的平均响应时间，当使用了 Transaction Controller 时，以Transaction 为单位显示平均响应时间。</li>
-<li>中位数（Median）： 50％ 用户的响应时间。</li>
-<li>90%百分位（90% Line）：90％ 用户的响应时间。以此类推95%，99%。</li>
-<li>最小值（Min）：最小响应时间。</li>
-<li>最大值（Max）：最大响应时间。</li>
-<li>异常（Error%）：错误请求数&#x2F;请求总数。</li>
-<li>吞吐量（Throughput）：默认情况下表示每秒完成的请求数（Request per Second），当使用了 Transaction Controller 时，也可以表示类似 LoadRunner 的 Transaction per Second 数。</li>
-<li>重点关注：1. Samples 请求数 2. Average 平均响应时间 3.Min 最小响应时间 4.Max 最大响应时间 5.Error% 异常率 6.Throughput 吞吐量。</li>
-</ul>
-</li>
-<li><p>开始测试，如下图:</p>
-<p><img src="/liaoblog/jmeter-use-9.png" alt="这是图片"><br><img src="/liaoblog/jmeter-use-10.png" alt="这是图片"><br><img src="/liaoblog/jmeter-use-11.png" alt="这是图片"></p>
-</li>
-<li><p>简单测试到这里就结束了。有两个功能没有描述，我测试的是短信接口：</p>
-<ul>
-<li>用户常量：顾明思义，用于测试不同的接口里面所需要的同一变量，比如user_id &#x3D;1 ，在查询用户资料或查询积分都会用上，为了避免重复填写或者改写多次。</li>
-<li>断言：用于检查测试中得到的响应数据等是否符合预期，用以保证性能测试过程中的数据交互与预期一致。</li>
+</ol>
+<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -n 1000 -c 100 -w http://www.baidu.com/ &gt;&gt;d:text.html</span><br></pre></td></tr></table></figure>
+![这是图片](../../images/article/miscellaneous/ab-5.png )
+![这是图片](../../images/article/miscellaneous/ab-6.png )
+</code></pre>
+<ol start="11">
+<li>ab测试的性能指标:<ul>
+<li>吞吐率（Requests per second）。<br>概念：服务器并发处理能力的量化描述，单位是reqs&#x2F;s，指的是在某个并发用户数下单位时间内处理的请求数。某个并发用户数下单位时间内能处理的最大请求数，称之为最大吞吐率。注意：吞吐率是基于并发用户数的，跟随用户数变化，数值表示当前机器的整体性能，值越大越好。</li>
+<li>并发用户数（Concurrency Level）。</li>
+<li>用户平均请求等待时间（Time per request）。用户等待时间参考2&#x2F;5&#x2F;8原则。</li>
 </ul>
 </li>
 </ol>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul>
+<li>注意测试服务器的时候要适量，ab会给测试对象带来压力，宕机别赖我啊。</li>
+</ul>
 </div>
         </div>
         
@@ -307,7 +297,7 @@
     <script type="text/javascript">
         $(()=>{
             new QRCode("wechat-qr", {
-                text: "https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95%E7%AF%87/",
+                text: "https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/",
                 width: 150,
                 height: 150,
                 correctLevel : QRCode.CorrectLevel.H
@@ -319,19 +309,14 @@
             const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
             const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
             const twitterBase   = "https://twitter.com/intent/tweet?";
-            const hostUrl       = "https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/JMeter%E4%BD%BF%E7%94%A8-%E7%AE%80%E5%8D%95%E6%B5%8B%E8%AF%95%E7%AF%87/";
-            const title         = "「」";
-            const excerpt       = `JMeter使用-简单测试篇步骤
-添加线程组，如下图：
- 
+            const hostUrl       = "https://loser-zzz.github.io/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/";
+            const title         = "「Apache自带的ab压力测试工具使用」";
+            const excerpt       = `Apache自带的ab压力测试工具使用步骤
+ab是Apache自带的压力测试工具，用于测试站点的承受能力，原名Apache Bench。
 
-线程组可以配置线程数，准备时长等参数，如下图：
- 
+ab的原理是：创建多个并发进程，模拟多个用户同时对同一个目标网址发起访问。
 
-参数详解：
-
-线程数：虚拟用户数，一个用户占用一个进程或线程。
-Ramp-Up Period(in seconds)准...`;
+使用方式，找到A...`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -350,10 +335,10 @@ Ramp-Up Period(in seconds)准...`;
             <div class="footer-tag clearfix">
                 <div class="pull-left">
                 <i class="fa fa-tags"></i>
-                    
+                    <a class="tag-none-link" href="/liaoblog/tags/ab/" rel="tag">ab</a>, <a class="tag-none-link" href="/liaoblog/tags/apache/" rel="tag">apache</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-09-05T14:00:24.022Z" itemprop="dateModified">最后编辑：2023-09-05</time>
+                    <time datetime="2023-09-05T15:01:36.404Z" itemprop="dateModified">最后编辑：2023-09-05</time>
                 </div>
             </div>
         </footer>
@@ -361,10 +346,10 @@ Ramp-Up Period(in seconds)准...`;
     
         <nav class="navigation post-navigation clearfix" role="navigation">
             
-            <div class="nav-previous clearfix">
-                <a title=" (无标题)" href="/liaoblog/2023/09/05/杂项/JMeter使用-安装篇/">&lt; 上一篇</a>
-            </div>
             
+            <div class="nav-next clearfix">
+                <a title=" (无标题)" href="/liaoblog/2023/09/05/Centos/Centos7.6下的LAMP之Apache编译/">下一篇 &gt;</a>
+            </div>
             
         </nav>
     
@@ -400,7 +385,7 @@ Ramp-Up Period(in seconds)准...`;
                 文章
             </span>
             <span class="count">
-                17
+                14
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/categories/">
@@ -408,7 +393,7 @@ Ramp-Up Period(in seconds)准...`;
                 分类
             </span>
             <span class="count">
-                0
+                1
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/tags/">
@@ -416,7 +401,7 @@ Ramp-Up Period(in seconds)准...`;
                 标签
             </span>
             <span class="count">
-                0
+                2
             </span>
         </a>
     </div>
@@ -425,9 +410,21 @@ Ramp-Up Period(in seconds)准...`;
                     <div class="sticky-area">
                 
                 
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/liaoblog/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li></ul>
+  </aside>
+
 
             
                 
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/liaoblog/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/liaoblog/tags/apache/" style="font-size: 0.6em;">apache</a>
+      </div>
+  </aside>
+
             
                 
   <aside id="krw-posts" class="widget widget-kratos-posts">
@@ -477,14 +474,8 @@ Ramp-Up Period(in seconds)准...`;
         
           
           
-        
-          
-          
-        
-          
-          
-        
-          
+            <a class="list-group-item" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa  fa-book"></i> Apache自带的ab压力测试工具使用</a>
+            
           
         
       </ul>

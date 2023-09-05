@@ -167,312 +167,6 @@
                 <div class="kratos-status-inner">
                     <div class="kratos-status-content" itemprop="articleBody">
                         
-                            <h1 id="Centos7-6安装oniguruma"><a href="#Centos7-6安装oniguruma" class="headerlink" title="Centos7.6安装oniguruma"></a>Centos7.6安装oniguruma</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  为啥要安装oniguruma，是因为PHP7.4.x中mbstring的正则表达式功能需要oniguruma。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>执行以下代码：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br><span class="line">wget https://github.com/kkos/oniguruma/archive/v6.9.4.tar.gz -O oniguruma-6.9.4.tar.gz </span><br><span class="line">tar -zxvf oniguruma-6.9.4.tar.gz</span><br><span class="line">cd oniguruma-6.9.4/</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --libdir=/lib64</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>根据小网站的提示，configure必须要有“–libdir&#x3D;&#x2F;lib64”这个参数，不然编译php7.4.x的时候一定会报No package ‘oniguruma’ found。当然除非你编译PHP的时候不使用mbstring的功能。</p>
-</li>
-</ol>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>  找挺久的一个资料，虽然广大网友也遇到了这个问题，但是终究没有试出一个合适的方案，翻了很久终于在一个小网站里面找到了。</p>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.749Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%AE%89%E8%A3%85oniguruma/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="Centos7-6升级gcc"><a href="#Centos7-6升级gcc" class="headerlink" title="Centos7.6升级gcc"></a>Centos7.6升级gcc</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  mysql8需要，升级gcc。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>安装依赖：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install bzip2 flex</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入源码目录：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>下载源码包：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解压文件：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf gcc-8.3.0.tar.gz</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入解压的文件夹：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd gcc-8.3.0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>继续安装依赖：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./contrib/download_prerequisites</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>执行命令后它会自动下载mpfr、gmp、mpc isl这4个库。</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd blogName</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>建立一个文件夹：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入文件夹：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd build</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/usr/local/gcc --enable-languages=c,c++ --disable-multilib</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编译和安装：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除旧版本的gcc：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y remove gcc</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建软连接：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/gcc/bin/gcc /usr/bin/gcc</span><br><span class="line">ln -s /usr/local/gcc/bin/g++ /usr/bin/g++</span><br></pre></td></tr></table></figure></li>
-<li><p>查看版本：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc –v</span><br><span class="line">g++ -v</span><br></pre></td></tr></table></figure>
-<p><img src="/liaoblog/centos-gcc-1.png" alt="这是图片"><br><img src="/liaoblog/centos-gcc-2.png" alt="这是图片"></p>
-</li>
-<li><p>就这样完成了？不，你错了，还有一个叫动态库的东西，版本更新了，但是动态库不一定更新了。是不是很惊喜（我更新完就去编译mysql了，然后炸了，丢）。</p>
-</li>
-<li><p>这里就不做是否动态库更新的判断了，直接就当做动态库没有更新。</p>
-</li>
-<li><p>查询gcc的安装路径:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name &quot;libstdc++.so*&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入操作目录:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib64/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>复制安装好的gcc文件到操作目录:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/gcc/lib64/libstdc++.so.6.0.25 /usr/lib64/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>删除旧的软连接，怕删错就拷贝一份做备份:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf libstdc++.so.6</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>添加软连接:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s libstdc++.so.6.0.25 libstdc++.so.6</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>到这一步才是安装完成。</p>
-</li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.743Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%8D%87%E7%BA%A7gcc/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="Centos7-6升级cmake"><a href="#Centos7-6升级cmake" class="headerlink" title="Centos7.6升级cmake"></a>Centos7.6升级cmake</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  由于要手动编译mysql8，需要高版本的cmake，不得不更新cmake。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>进入src目录，执行以下命令：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>下载源码包：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/src</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解压源码包：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf cmake-3.13.2.tar.gz</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入解压后的文件夹：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd  /usr/local/src/cmake-3.13.2</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>开始配置(–prefix 指定安装目录)：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bootstrap --prefix=/usr/local/cmake</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置完就开始编译安装：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果是系统有自带的cmake，就要删除，已删除过的请忽略：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove cmake -y</span><br></pre></td></tr></table></figure></li>
-<li><p>安装完创建命令的软连接：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/cmake/bin/cmake /usr/bin/cmake</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>执行版本的命令：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake --version</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>出现如下就是成功了：</p>
-<p><img src="/liaoblog/centos-cmake.png" alt="这是图片"></p>
-</li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.737Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E5%8D%87%E7%BA%A7cmake/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
-                            <h1 id="Centos7-6下的Mysql8-0-20编译错误合集"><a href="#Centos7-6下的Mysql8-0-20编译错误合集" class="headerlink" title="Centos7.6下的Mysql8.0.20编译错误合集"></a>Centos7.6下的Mysql8.0.20编译错误合集</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  搭建mysql8.0.20遇见的问题点汇总。</p>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li><p>错误：‘SYS_gettid’：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc: 在函数‘void buf_pool_create(buf_pool_t*, ulint, ulint, std::mutex*, dberr_t&amp;)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 错误：‘SYS_gettid’在此作用域中尚未声明</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 附注：suggested alternative: ‘my_getwd’</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">                                           my_getwd</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/buf/buf0buf.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
-
-<p> <img src="/liaoblog/centos-mysql-error-1.png" alt="这是图片"></p>
-</li>
-<li><p>解决方案：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc</span><br></pre></td></tr></table></figure>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">include <span class="string">&quot;sys/syscall.h&quot;</span></span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>错误：‘os_compare_and_swap_thread_id’ 注意：文件名是lock0lock.cc:</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	  /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc: 在函数‘void lock_mark_trx_for_rollback(hit_list_t&amp;, trx_id_t, trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 附注：suggested alternative: ‘os_compare_and_swap_uint64’</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">         os_compare_and_swap_uint64</span><br><span class="line">	make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/lock/lock0lock.cc.o] 错误 1</span><br><span class="line">	make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">	make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
-<p> <img src="/liaoblog/centos-mysql-error-2.png" alt="这是图片"></p>
-</li>
-<li><p>解决方案：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc</span><br></pre></td></tr></table></figure>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将 “os_compare_and_swap_thread_id” 修改为</span></span><br><span class="line">os_compare_and_swap_lint</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>错误：‘os_compare_and_swap_thread_id’注意：文件名是trx0trx.cc：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_init(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_kill_blocking(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/trx/trx0trx.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
-<p> <img src="/liaoblog/centos-mysql-error-3.png" alt="这是图片"></p>
-</li>
-<li><p>解决方案：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc</span><br></pre></td></tr></table></figure>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将 “os_compare_and_swap_thread_id” 修改为</span></span><br><span class="line">os_compare_and_swap_lint</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-                        
-                    </div>
-                </div>
-            </div>
-            
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2023-09-05T14:02:26.732Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
-                        </time>
-                        
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
-                        
-                        
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
-                        
-                    </span>
-                    
-                    
-                        <span class="pull-right">
-                            <a class="read-more" href="/liaoblog/2023/09/05/Centos/Centos7.6%E4%B8%8B%E7%9A%84Mysql8.0.20%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF%E5%90%88%E9%9B%86/" title="留言">留言<i class="fa fa-chevron-circle-right"></i></a>
-                        </span>
-                    
-
-                </footer>
-            
-        </article>
-    
-
-    
-    
-        <article class="kratos-hentry kratos-entry-border-new clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-status">
-                
-                    <i class="fa fa-refresh"></i>
-                
-                <div class="kratos-status-inner">
-                    <div class="kratos-status-content" itemprop="articleBody">
-                        
                             <h1 id="Centos7-6下的LAMP之PHP编译"><a href="#Centos7-6下的LAMP之PHP编译" class="headerlink" title="Centos7.6下的LAMP之PHP编译"></a>Centos7.6下的LAMP之PHP编译</h1><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
 <li><p>安装以下的依赖：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install libxml2 libxml2-devel openssl openssl-devel bzip2 bzip2-devel libcurl libcurl-devel libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gmp gmp-devel readline readline-devel libxslt libxslt-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel ncurses curl gdbm-devel libXpm-devel libX11-devel gd-devel gmp-devel expat-devel libicu-devel libzip-devel sqlite-devel libtool</span><br></pre></td></tr></table></figure>
@@ -792,6 +486,64 @@
         </article>
     
 
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/liaoblog/categories/%E6%9D%82%E9%A1%B9/">杂项</a>
+                        <h2 class="kratos-entry-title-new"><a href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" itemprop="mainEntityOfPage"><span itemprop="name headline">Apache自带的ab压力测试工具使用</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                Apache自带的ab压力测试工具使用步骤
+ab是Apache自带的压力测试工具，用于测试站点的承受能力，原名Apache Bench。
+
+ab的原理是：创建多个并发进程，模拟多个用户同时对同一个目标网址发起访问。
+
+使用方式，找到A...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-09-04T16:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-09-05</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/liaoblog/tags/ab/" rel="tag">ab</a>, <a class="tag-none-link" href="/liaoblog/tags/apache/" rel="tag">apache</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
+
 
 
     <div class='text-center pagination'>
@@ -838,7 +590,7 @@
                 文章
             </span>
             <span class="count">
-                17
+                14
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/categories/">
@@ -846,7 +598,7 @@
                 分类
             </span>
             <span class="count">
-                0
+                1
             </span>
         </a>
         <a class="meta-item" href="/liaoblog/tags/">
@@ -854,16 +606,28 @@
                 标签
             </span>
             <span class="count">
-                0
+                2
             </span>
         </a>
     </div>
 </aside>
             
                 
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/liaoblog/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li></ul>
+  </aside>
+
 
             
                 
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/liaoblog/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/liaoblog/tags/apache/" style="font-size: 0.6em;">apache</a>
+      </div>
+  </aside>
+
             
                 
   <aside id="krw-posts" class="widget widget-kratos-posts">
@@ -913,14 +677,8 @@
         
           
           
-        
-          
-          
-        
-          
-          
-        
-          
+            <a class="list-group-item" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa  fa-book"></i> Apache自带的ab压力测试工具使用</a>
+            
           
         
       </ul>
