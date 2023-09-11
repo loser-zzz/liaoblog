@@ -26,7 +26,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://loser-zzz.github.io/images/logo.jpg">
 <meta property="article:published_time" content="2023-09-04T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-09-11T06:51:37.184Z">
+<meta property="article:modified_time" content="2023-09-11T07:18:28.624Z">
 <meta property="article:author" content="Liao">
 <meta property="article:tag" content="Centos">
 <meta name="twitter:card" content="summary">
@@ -188,7 +188,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1694415097184"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1694416708624"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -199,7 +199,7 @@
 <li><p>错误：‘SYS_gettid’：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc: 在函数‘void buf_pool_create(buf_pool_t*, ulint, ulint, std::mutex*, dberr_t&amp;)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 错误：‘SYS_gettid’在此作用域中尚未声明</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc:1219:44: 附注：suggested alternative: ‘my_getwd’</span><br><span class="line">  setpriority(PRIO_PROCESS, (pid_t)syscall(SYS_gettid), -20);</span><br><span class="line">                                           ^~~~~~~~~~</span><br><span class="line">                                           my_getwd</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/buf/buf0buf.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
 
-<p> <img src="/../../images/article/centos/centos-mysql-error-1.png" alt="这是图片"></p>
+<p> <img src="/../../images/article/centos/centos-mysql-error-1.png"></p>
 </li>
 <li><p>解决方案：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/buf/buf0buf.cc</span><br></pre></td></tr></table></figure>
@@ -207,7 +207,7 @@
 </li>
 <li><p>错误：‘os_compare_and_swap_thread_id’ 注意：文件名是lock0lock.cc:</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	  /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc: 在函数‘void lock_mark_trx_for_rollback(hit_list_t&amp;, trx_id_t, trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc:1171:9: 附注：suggested alternative: ‘os_compare_and_swap_uint64’</span><br><span class="line">   	cas = os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, 0, thread_id);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">         os_compare_and_swap_uint64</span><br><span class="line">	make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/lock/lock0lock.cc.o] 错误 1</span><br><span class="line">	make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">	make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
-<p> <img src="/../../images/article/centos/centos-mysql-error-2.png" alt="这是图片"></p>
+<p> <img src="/../../images/article/centos/centos-mysql-error-2.png"></p>
 </li>
 <li><p>解决方案：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/lock/lock0lock.cc</span><br></pre></td></tr></table></figure>
@@ -215,7 +215,7 @@
 </li>
 <li><p>错误：‘os_compare_and_swap_thread_id’注意：文件名是trx0trx.cc：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_init(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:223:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc: 在函数‘void trx_kill_blocking(trx_t*)’中:</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 错误：‘os_compare_and_swap_thread_id’在此作用域中尚未声明</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">/usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc:3235:5: 附注：suggested alternative: ‘os_compare_and_swap_lint’</span><br><span class="line">    os_compare_and_swap_thread_id(&amp;victim_trx-&gt;killed_by, thread_id, 0);</span><br><span class="line">    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">    os_compare_and_swap_lint</span><br><span class="line">make[2]: *** [storage/innobase/CMakeFiles/innobase.dir/trx/trx0trx.cc.o] 错误 1</span><br><span class="line">make[1]: *** [storage/innobase/CMakeFiles/innobase.dir/all] 错误 2</span><br><span class="line">make: *** [all] 错误 2</span><br></pre></td></tr></table></figure>
-<p> <img src="/../../images/article/centos/centos-mysql-error-3.png" alt="这是图片"></p>
+<p> <img src="/../../images/article/centos/centos-mysql-error-3.png"></p>
 </li>
 <li><p>解决方案：</p>
  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /usr/local/src/mysql-8.0.20/storage/innobase/trx/trx0trx.cc</span><br></pre></td></tr></table></figure>
@@ -313,7 +313,7 @@
                     <a class="tag-none-link" href="/tags/Centos/" rel="tag">Centos</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-09-11T06:51:37.184Z" itemprop="dateModified">最后编辑：2023-09-11</time>
+                    <time datetime="2023-09-11T07:18:28.624Z" itemprop="dateModified">最后编辑：2023-09-11</time>
                 </div>
             </div>
         </footer>
