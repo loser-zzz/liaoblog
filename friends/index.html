@@ -20,7 +20,7 @@
   <meta name="description" content="留下没有技术的泪水~">
 <meta property="og:type" content="website">
 <meta property="og:title" content="好伙伴们">
-<meta property="og:url" content="https://loser-zzz.github.io/liaoblog/friends/index.html">
+<meta property="og:url" content="https://loser-zzz.github.io/friends/index.html">
 <meta property="og:site_name" content="生命是一场无法回放的电影">
 <meta property="og:description" content="留下没有技术的泪水~">
 <meta property="og:locale" content="en_US">
@@ -36,27 +36,27 @@
     
   
   <!-- 样式表文件 -->
-  <link rel="stylesheet" id="kratos-css" href="/liaoblog/css/kratosr.min.css" media="all"></script>
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
   
-    <link rel="stylesheet" id="darkmode-css" href="/liaoblog/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
-    <script src="/liaoblog/js/kr-dark.min.js"></script>
-  
-  
-    <link rel="stylesheet" id="highlight-css" href="/liaoblog/css/highlight/night-eighties.min.css" media="all"></script>
-  
-  <link rel="stylesheet" id="fontawe-css" href="/liaoblog/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
-  <link rel="stylesheet" id="nprogress-css" href="/liaoblog/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
   
   
-    <link rel="stylesheet" href="/liaoblog/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
   
   
-    <link rel="stylesheet" href="/liaoblog/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
   
   <!-- 不得不预先加载的一些JS文件 -->
-  <script src="/liaoblog/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
   
-    <script src="/liaoblog/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
   
   
   <style>
@@ -80,7 +80,7 @@
                                     
                                         <li>
                                             
-                                                <a href="/liaoblog/">
+                                                <a href="/">
                                             
                                                 
                                                     <i class="fa fa-home"></i>
@@ -92,7 +92,7 @@
                                     
                                         <li>
                                             
-                                                <a href="/liaoblog/archives/">
+                                                <a href="/archives/">
                                             
                                                 
                                                     <i class="fa fa-book"></i>
@@ -104,7 +104,7 @@
                                     
                                         <li>
                                             
-                                                <a href="/liaoblog/friends/">
+                                                <a href="/friends/">
                                             
                                                 
                                                     <i class="fa fa-heartbeat"></i>
@@ -122,7 +122,7 @@
             </header>
             <header id="kratos-mobile-topnav" class="kratos-topnav">
                 <div class="container">
-                    <div class="color-logo"><a href="/liaoblog/">生命是一场无法回放的电影</a></div>
+                    <div class="color-logo"><a href="/">生命是一场无法回放的电影</a></div>
                     <div class="nav-toggle">
                         <a class="kratos-nav-toggle js-kratos-nav-toggle">
                             <i></i>
@@ -135,7 +135,7 @@
             <!-- <div class="kratos-overlay"></div> -->
             <div class="kratos-cover kratos-cover-2 text-center">
                 <div class="desc desc2 animate-box">
-                    <a href="/liaoblog/">
+                    <a href="/">
                         <h2>生命是一场无法回放的电影</h2> <br />
                         <span></span>
                     </a>
@@ -169,7 +169,7 @@
     let friendNodes = '';
     while (flist.length > 0) {
         const rndNum = Math.floor(Math.random()*flist.length);
-        friendNodes += `<li><a target="_blank" href="${flist[rndNum].link}"><img src="${flist[rndNum].avatar}" onerror="this.src='/liaoblog/images/avatar.webp';this.onerror=null;"><h4>${flist[rndNum].name}</h4><p>${flist[rndNum].bio}</p></a></li>`;
+        friendNodes += `<li><a target="_blank" href="${flist[rndNum].link}"><img src="${flist[rndNum].avatar}" onerror="this.src='/images/avatar.webp';this.onerror=null;"><h4>${flist[rndNum].name}</h4><p>${flist[rndNum].bio}</p></a></li>`;
         flist.splice(rndNum, 1);
     }
     document.getElementById("friendsList").innerHTML = friendNodes;
@@ -214,7 +214,7 @@
         <p class="text-center"></p>
     </div>
     <div class="site-meta">
-        <a class="meta-item" href="/liaoblog/archives/">
+        <a class="meta-item" href="/archives/">
             <span class="title">
                 文章
             </span>
@@ -222,7 +222,7 @@
                 14
             </span>
         </a>
-        <a class="meta-item" href="/liaoblog/categories/">
+        <a class="meta-item" href="/categories/">
             <span class="title">
                 分类
             </span>
@@ -230,7 +230,7 @@
                 1
             </span>
         </a>
-        <a class="meta-item" href="/liaoblog/tags/">
+        <a class="meta-item" href="/tags/">
             <span class="title">
                 标签
             </span>
@@ -244,7 +244,7 @@
                 
   <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
     <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/liaoblog/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li></ul>
   </aside>
 
 
@@ -253,7 +253,7 @@
   <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
     <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
       <div class="tag-clouds">
-        <a href="/liaoblog/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/liaoblog/tags/apache/" style="font-size: 0.6em;">apache</a>
+        <a href="/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/tags/apache/" style="font-size: 0.6em;">apache</a>
       </div>
   </aside>
 
@@ -306,7 +306,7 @@
         
           
           
-            <a class="list-group-item" href="/liaoblog/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa  fa-book"></i> Apache自带的ab压力测试工具使用</a>
+            <a class="list-group-item" href="/2023/09/05/%E6%9D%82%E9%A1%B9/Apache%E8%87%AA%E5%B8%A6%E7%9A%84ab%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"><i class="fa  fa-book"></i> Apache自带的ab压力测试工具使用</a>
             
           
         
@@ -365,7 +365,7 @@
             <div class="tool">
                 
                     <div class="box search-box">
-                        <a href="/liaoblog/search/">
+                        <a href="/search/">
                             <span class="fa fa-search"></span>
                         </a>
                     </div>
@@ -387,24 +387,24 @@
 </div>
 </div>
 
-        <script defer src="/liaoblog/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
-<script defer src="/liaoblog/vendors/nprogress@0.2.0/nprogress.js"></script>
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
 <script>
     if (!window.kr) {
         window.kr = {};
     }
     window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
-    window.kr.siteRoot = "/liaoblog/";
+    window.kr.siteRoot = "/";
 </script>
 
 
-    <script async src="/liaoblog/js/candy.min.js"></script>
+    <script async src="/js/candy.min.js"></script>
 
 
 
-    <script defer src="/liaoblog/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
     
-    <script defer src="/liaoblog/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
     <meting-js
         server="netease"
         type="playlist"
@@ -416,10 +416,10 @@
 
 
 
-    <script defer src="/liaoblog/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
-<script defer src="/liaoblog/js/kratosr.min.js"></script>
-<script defer src="/liaoblog/js/pjax.min.js"></script>
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
 
 
 
