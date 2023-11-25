@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  <link rel="icon" href="../images/logo.jpg">
+  
+  <title>laravel使用简单队列案例 | 生命是一场无法回放的电影</title>
+  
+  <meta name="author" content="Liao" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="Laravel, PHP, queue" />
+  
+  <meta name="description" content="laravel使用简单队列(queue)案例引言  队列是一种特殊的线性表，只能在表头进行删除操作，表尾进行添加操作，简单来说就是数据的先进先出原则。  另类的理解案例：你（消费者）在公司上班，按照领导（生产者）给你的任务表（队列）开始搬砖干活，任务表里面有着任务1，任务2，任务3，干活嘛只能一件一件干，所以要完成任务1才能去做任务2，以此类推，直到干完活，想屁吃呢，领导只会给你不停的生产任务，比">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel使用简单队列案例">
+<meta property="og:url" content="https://loser-zzz.github.io/2023/11/15/PHP/laravel%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E9%98%9F%E5%88%97%E6%A1%88%E4%BE%8B/index.html">
+<meta property="og:site_name" content="生命是一场无法回放的电影">
+<meta property="og:description" content="laravel使用简单队列(queue)案例引言  队列是一种特殊的线性表，只能在表头进行删除操作，表尾进行添加操作，简单来说就是数据的先进先出原则。  另类的理解案例：你（消费者）在公司上班，按照领导（生产者）给你的任务表（队列）开始搬砖干活，任务表里面有着任务1，任务2，任务3，干活嘛只能一件一件干，所以要完成任务1才能去做任务2，以此类推，直到干完活，想屁吃呢，领导只会给你不停的生产任务，比">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://loser-zzz.github.io/images/logo.jpg">
+<meta property="article:published_time" content="2023-11-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-24T09:09:49.903Z">
+<meta property="article:author" content="Liao">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Laravel">
+<meta property="article:tag" content="queue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loser-zzz.github.io/images/logo.jpg">
+  
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+    
+  </style>
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                        <li>
+                                            
+                                                <a href="/">
+                                            
+                                                
+                                                    <i class="fa fa-home"></i>
+                                                
+                                                首页
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                        <li>
+                                            
+                                                <a href="/archives/">
+                                            
+                                                
+                                                    <i class="fa fa-book"></i>
+                                                
+                                                档案馆
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                        <li>
+                                            
+                                                <a href="/friends/">
+                                            
+                                                
+                                                    <i class="fa fa-heartbeat"></i>
+                                                
+                                                好伙伴
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">生命是一场无法回放的电影</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>生命是一场无法回放的电影</h2> <br />
+                        <span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="https://loser-zzz.github.io/2023/11/15/PHP/laravel%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E9%98%9F%E5%88%97%E6%A1%88%E4%BE%8B/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">laravel使用简单队列案例</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2023-11-14T16:00:00.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-11-15</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Liao</span>
+                </li>
+                
+                    <li>
+                        <i class="fa fa-edit"></i> 
+                        
+                        
+                            ~5.03K
+                        
+                        字
+                    </li>
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1700816989903"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="laravel使用简单队列-queue-案例"><a href="#laravel使用简单队列-queue-案例" class="headerlink" title="laravel使用简单队列(queue)案例"></a>laravel使用简单队列(queue)案例</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  队列是一种特殊的线性表，只能在表头进行删除操作，表尾进行添加操作，简单来说就是数据的先进先出原则。<br>  另类的理解案例：你（消费者）在公司上班，按照领导（生产者）给你的任务表（队列）开始搬砖干活，任务表里面有着任务1，任务2，任务3，干活嘛只能一件一件干，所以要完成任务1才能去做任务2，以此类推，直到干完活，想屁吃呢，领导只会给你不停的生产任务，比如刚刚生产出来任务4嘛，就会安排在任务3后面，以此类推，然后你就不停的干活，日复一日，年复一年。Ps：队列本质上就是一堆任务排队，先进先出。<br>  队列的应用场景：群发短信，订单系统有大量的日志，秒杀设计等，大致上就是数据量多，一下处理不完的，就会使用队列处理。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>准备好laravel6.0框架，另外这个是在windows的情况下写的，没有使用守护进程那些。</p>
+</li>
+<li><p>我要实现的内容，就是访问一个页面产生一个访问记录添加到队列里面，然后队列自动把这个记录写进数据库。</p>
+</li>
+<li><p>配置laravel的.env文件:</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">   #</span><span class="language-bash">把QUEUE_CONNECTION修改成database 使用数据库来做队列</span></span><br><span class="line">QUEUE_CONNECTION=database</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>做数据迁移，注意要保证好数据库能连接：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建一个迁移数据库文件-队列用的 注意：以防万一，建议你查看\database\migrations下有没有xxxx_create_jobs_table.php的文件，有的话无需执行命令</span></span><br><span class="line">php artisan queue:table </span><br><span class="line">php artisan queue:failed-table </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把迁移文件导进数据库 注意：本身框架会自带一些迁移数据的文件，所以最好选择性导入，空数据库导入也没关系的。</span></span><br><span class="line">php artisan migrate</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个记录表，用来存储访问的记录：</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `logs` (</span><br><span class="line">     `id` <span class="type">int</span>(<span class="number">11</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">     `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">     `<span class="type">time</span>` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">     <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">   ) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最终数据库长这个样:</p>
+<p> <img src="/../../images/article/php/laravel-queue-1.png"></p>
+</li>
+<li><p>生成一个队列的类：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:job Logs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行完后，到app的目录下会有一个Jobs的目录，所有默认的队列类都会在这里，打开Logs.php，复制以下的内容，记得要看里面的注释：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Jobs</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Bus</span>\<span class="title">Queueable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Queue</span>\<span class="title">ShouldQueue</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Bus</span>\<span class="title">Dispatchable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Queue</span>\<span class="title">InteractsWithQueue</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Queue</span>\<span class="title">SerializesModels</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">DB</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Logs</span> <span class="keyword">implements</span> <span class="title">ShouldQueue</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Dispatchable</span>, <span class="title">InteractsWithQueue</span>, <span class="title">Queueable</span>, <span class="title">SerializesModels</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$name</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$time</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new job instance.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$name</span>,<span class="variable">$time</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//这里是数据的初始化</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;name = <span class="variable">$name</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;time = <span class="variable">$time</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Execute the job.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//队列操作的逻辑  这里简单的写一个 添加记录逻辑</span></span><br><span class="line">        DB::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;logs&#x27;</span>)-&gt;<span class="title function_ invoke__">insert</span>(</span><br><span class="line">            [</span><br><span class="line">                <span class="string">&#x27;name&#x27;</span> =&gt; <span class="variable">$this</span>-&gt;name,</span><br><span class="line">                <span class="string">&#x27;time&#x27;</span> =&gt; <span class="variable">$this</span>-&gt;time,</span><br><span class="line">            ]</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个控制器：</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:controller LccController</span><br></pre></td></tr></table></figure></li>
+<li><p>在app\Http\Controllers的目录下会有一个LccController控制器，打开编辑：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Http</span>\<span class="title class_">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Jobs</span>\<span class="title">Logs</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LccController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">cc</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$name</span>=<span class="string">&#x27;user_&#x27;</span> . <span class="title function_ invoke__">rand</span>(<span class="number">100</span>,<span class="number">1000</span>);<span class="comment">//用户名称</span></span><br><span class="line">        <span class="variable">$time</span>=<span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>,<span class="title function_ invoke__">time</span>());<span class="comment">//访问时间</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加任务到队列里面</span></span><br><span class="line">        <span class="title class_">Logs</span>::<span class="title function_ invoke__">dispatch</span>(<span class="variable">$name</span>,<span class="variable">$time</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> [<span class="variable">$name</span>,<span class="variable">$time</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑路由文件，routes&#x2F;web.php,添加以下代码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;/cc&#x27;</span>, <span class="string">&#x27;LccController@cc&#x27;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这样就可以进行访问了，你可以多访问几次，访问多了你就去数据表jobs看看是不是多了一些数据，这些数据就是队列里面的任务。</p>
+<p><img src="/../../images/article/php/laravel-queue-2.png"></p>
+</li>
+<li><p>没有执行队列里面的任务，是因为队列没有开启，执行下面的命令（注意：队列的执行是常驻的，需要守护进程之类的辅助监听状态）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan queue:work</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行完命令之后，队列自动执行任务：</p>
+<p><img src="/../../images/article/php/laravel-queue-3.png"></p>
+<p><img src="/../../images/article/php/laravel-queue-4.png"></p>
+</li>
+<li><p>从上得出，任务执行完之后会自动删除，并且数据是有序执行的。</p>
+</li>
+<li><p>进数据库里面还有一个表failed_jobs，用来存储执行失败任务，做一个执行失败测试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:job ErrLogs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把之前的Logs队列类里面的方法复制到ErrLogs队列类里面，并修改以下方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//这里修改成errlogs 其他不变</span></span><br><span class="line">    DB::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;errlogs&#x27;</span>)-&gt;<span class="title function_ invoke__">insert</span>(</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&#x27;name&#x27;</span> =&gt; <span class="variable">$this</span>-&gt;name,</span><br><span class="line">            <span class="string">&#x27;time&#x27;</span> =&gt; <span class="variable">$this</span>-&gt;time,</span><br><span class="line">        ]</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在LccController控制器添加多一个err的方法并引入jobs下的ErrLogs队列类：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Jobs</span>\<span class="title">ErrLogs</span>;</span><br><span class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">err</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="variable">$name</span>=<span class="string">&#x27;user_&#x27;</span> . <span class="title function_ invoke__">rand</span>(<span class="number">100</span>,<span class="number">1000</span>);<span class="comment">//用户名称</span></span><br><span class="line">       <span class="variable">$time</span>=<span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>,<span class="title function_ invoke__">time</span>());<span class="comment">//访问时间</span></span><br><span class="line"></span><br><span class="line">       <span class="comment">//添加任务到队列里面</span></span><br><span class="line">       <span class="title class_">ErrLogs</span>::<span class="title function_ invoke__">dispatch</span>(<span class="variable">$name</span>,<span class="variable">$time</span>);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> [<span class="variable">$name</span>,<span class="variable">$time</span>];</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加一个路由：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;/err&#x27;</span>, <span class="string">&#x27;LccController@err&#x27;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问这个err的路由多几次，然后去看看failed_jobs表有没有添加数据，没有的话就检查队列是否开启，我是一直开启的，所以每次生产就会直接被消费掉了。</p>
+</li>
+<li><p>failed_jobs会有以下的内容：</p>
+<p><img src="/../../images/article/php/laravel-queue-5.png"></p>
+<p>Exception：这个是执行错误原因。<br>Payload：这个是说明哪个队列类。</p>
+</li>
+<li><p>有些场景队列错误了想要立刻发邮件提示技术人员的话，laravel是有提供一个failed函数，ErrLogs的队列类上添加以下方法：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//执行错误之后的处理</span></span><br><span class="line">   <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">failed</span>(<span class="params">\<span class="built_in">Exception</span> <span class="variable">$exception</span></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       <span class="comment">//比如执行错误了要提示管理员 说明 队列异常了的代码逻辑  这里我就用添加到数据表来模拟</span></span><br><span class="line">       DB::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;test&#x27;</span>)-&gt;<span class="title function_ invoke__">insert</span>(</span><br><span class="line">           [</span><br><span class="line">               <span class="string">&#x27;log&#x27;</span> =&gt; <span class="string">&#x27;报告！有异常-&#x27;</span>.<span class="variable">$exception</span>-&gt;<span class="title function_ invoke__">getMessage</span>(),</span><br><span class="line">           ]</span><br><span class="line">       );</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加一个报告用的表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `test` (</span><br><span class="line">     `id` <span class="type">int</span>(<span class="number">10</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">     `log` text <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">     <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">   ) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接着访问这个err的路由多几次（一定要先重启队列，任何队列类修改之后一定要重启），然后去看看failed_jobs表和test表有没有添加数据。</p>
+</li>
+<li><p>之前错误了这么多队列任务，不能放着吧，把错误原因修正，添加errlogs表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `errlogs` (</span><br><span class="line">     `id` <span class="type">int</span>(<span class="number">11</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">     `name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">     `<span class="type">time</span>` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">     <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">   ) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">1</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>错误修正了，那就把之前错误的队列任务找回来，重新执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan queue:retry all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>你就发现之前的failed_jobs表里面的数据会还原到jobs表里面，同时errlogs的表也进行添加了数据，如果队列还开着的话就会自动重新执行，没有开的话就执行:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan queue:work</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Laravel简单的队列（jobs）就是这么使用的，真实使用还需要配合守护进程（Supervisor）等。</p>
+</li>
+</ol>
+</div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "https://loser-zzz.github.io/2023/11/15/PHP/laravel%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E9%98%9F%E5%88%97%E6%A1%88%E4%BE%8B/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "https://loser-zzz.github.io/2023/11/15/PHP/laravel%E4%BD%BF%E7%94%A8%E7%AE%80%E5%8D%95%E9%98%9F%E5%88%97%E6%A1%88%E4%BE%8B/";
+            const title         = "「laravel使用简单队列案例」";
+            const excerpt       = `laravel使用简单队列(queue)案例引言  队列是一种特殊的线性表，只能在表头进行删除操作，表尾进行添加操作，简单来说就是数据的先进先出原则。  另类的理解案例：你（消费者）在公司上班，按照领导（生产者）给你的任务表（队列）开...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Laravel/" rel="tag">Laravel</a>, <a class="tag-none-link" href="/tags/PHP/" rel="tag">PHP</a>, <a class="tag-none-link" href="/tags/queue/" rel="tag">queue</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2023-11-24T09:09:49.903Z" itemprop="dateModified">最后编辑：2023-11-24</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" Centos7.6下的LAMP之Apache编译" href="/2023/09/05/Centos/Centos7.6下的LAMP之Apache编译/">&lt; 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" Laravel队列与supervisor简单使用" href="/2023/11/15/PHP/Laravel队列与supervisor简单使用/">下一篇 &gt;</a>
+            </div>
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="../images/logo.jpg" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center"></p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                26
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                5
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                17
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Centos/">Centos</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MYSQL/">MYSQL</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">7</span></li></ul>
+  </aside>
+
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/Centos/" style="font-size: 0.8em;">Centos</a> <a href="/tags/ElasticSearch/" style="font-size: 0.65em;">ElasticSearch</a> <a href="/tags/Hexo/" style="font-size: 0.6em;">Hexo</a> <a href="/tags/JMeter/" style="font-size: 0.65em;">JMeter</a> <a href="/tags/Laravel/" style="font-size: 0.7em;">Laravel</a> <a href="/tags/PHP/" style="font-size: 0.75em;">PHP</a> <a href="/tags/PHPUnit/" style="font-size: 0.6em;">PHPUnit</a> <a href="/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/tags/apache/" style="font-size: 0.6em;">apache</a> <a href="/tags/git/" style="font-size: 0.65em;">git</a> <a href="/tags/github/" style="font-size: 0.6em;">github</a> <a href="/tags/jenkins/" style="font-size: 0.6em;">jenkins</a> <a href="/tags/mysql/" style="font-size: 0.65em;">mysql</a> <a href="/tags/navicat/" style="font-size: 0.6em;">navicat</a> <a href="/tags/queue/" style="font-size: 0.6em;">queue</a> <a href="/tags/supervisor/" style="font-size: 0.6em;">supervisor</a> <a href="/tags/svn/" style="font-size: 0.6em;">svn</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/24/Centos/liunx%E5%AE%89%E8%A3%85svn%E5%B0%8F%E4%B9%8C%E9%BE%9F%E6%9C%8D%E5%8A%A1%E7%AB%AF/"><i class="fa  fa-book"></i> liunx安装svn小乌龟服务端</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/24/MYSQL/mysql+navicat-%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E6%96%87%E6%A1%A3/"><i class="fa  fa-book"></i> mysql+navicat-导出数据库文档</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/24/MYSQL/mysql%E7%B2%BE%E7%A1%AE%E5%8C%B9%E9%85%8D-find_in_set/"><i class="fa  fa-book"></i> mysql精确匹配-find_in_set</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/23/%E6%9D%82%E9%A1%B9/centos%E5%AE%89%E8%A3%85jenkins/"><i class="fa  fa-book"></i> centos安装jenkins</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/15/PHP/Laravel%E7%9A%84with%E5%8A%A8%E6%80%81%E6%9D%A1%E4%BB%B6%E7%94%A8%E6%B3%95/"><i class="fa  fa-book"></i> Laravel的with动态条件用法</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  class="ap-lrc"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <!-- Keep for compatibility -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- New links -->
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2023 生命是一场无法回放的电影 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by Liao.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <meting-js
+        server="netease"
+        type="playlist"
+        id="3204190542"
+        order="random"
+        fixed="true"
+    >
+    </meting-js>
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    </body>
+</html>
