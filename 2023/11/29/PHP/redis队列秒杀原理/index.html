@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  <link rel="icon" href="../images/logo.jpg">
+  
+  <title>redis队列秒杀原理 | 生命是一场无法回放的电影</title>
+  
+  <meta name="author" content="Liao" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="PHP, redis" />
+  
+  <meta name="description" content="redis队列秒杀原理引言  在商品秒杀等场景中，使用普通的方法处理的话，容易出现以下问题：    - 高并发下的流量冲击数据库    - 商品容易出现库存超卖问题  秒杀的大致逻辑：秒杀前，商品上架的时候，将库存添加到redis的队列中，秒杀开始的时候查询这个商品的redis的队列（队列先进先出原则），从这个队列取出值，取出成功的下单，取出失败的全部返回false。 步骤 准备好redis的环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis队列秒杀原理">
+<meta property="og:url" content="https://loser-zzz.github.io/2023/11/29/PHP/redis%E9%98%9F%E5%88%97%E7%A7%92%E6%9D%80%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="生命是一场无法回放的电影">
+<meta property="og:description" content="redis队列秒杀原理引言  在商品秒杀等场景中，使用普通的方法处理的话，容易出现以下问题：    - 高并发下的流量冲击数据库    - 商品容易出现库存超卖问题  秒杀的大致逻辑：秒杀前，商品上架的时候，将库存添加到redis的队列中，秒杀开始的时候查询这个商品的redis的队列（队列先进先出原则），从这个队列取出值，取出成功的下单，取出失败的全部返回false。 步骤 准备好redis的环境">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://loser-zzz.github.io/images/logo.jpg">
+<meta property="article:published_time" content="2023-11-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-11-29T15:02:04.851Z">
+<meta property="article:author" content="Liao">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://loser-zzz.github.io/images/logo.jpg">
+  
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+    
+  </style>
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                        <li>
+                                            
+                                                <a href="/">
+                                            
+                                                
+                                                    <i class="fa fa-home"></i>
+                                                
+                                                首页
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                        <li>
+                                            
+                                                <a href="/archives/">
+                                            
+                                                
+                                                    <i class="fa fa-book"></i>
+                                                
+                                                档案馆
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                        <li>
+                                            
+                                                <a href="/friends/">
+                                            
+                                                
+                                                    <i class="fa fa-heartbeat"></i>
+                                                
+                                                好伙伴
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">生命是一场无法回放的电影</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>生命是一场无法回放的电影</h2> <br />
+                        <span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="https://loser-zzz.github.io/2023/11/29/PHP/redis%E9%98%9F%E5%88%97%E7%A7%92%E6%9D%80%E5%8E%9F%E7%90%86/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">redis队列秒杀原理</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2023-11-28T16:00:00.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-11-29</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">Liao</span>
+                </li>
+                
+                    <li>
+                        <i class="fa fa-edit"></i> 
+                        
+                        
+                            ~7.78K
+                        
+                        字
+                    </li>
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1701270124851"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            
+            <hr />
+            <div itemprop="articleBody"><h1 id="redis队列秒杀原理"><a href="#redis队列秒杀原理" class="headerlink" title="redis队列秒杀原理"></a>redis队列秒杀原理</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>  在商品秒杀等场景中，使用普通的方法处理的话，容易出现以下问题：<br>    - 高并发下的流量冲击数据库<br>    - 商品容易出现库存超卖问题<br>  秒杀的大致逻辑：秒杀前，商品上架的时候，将库存添加到redis的队列中，秒杀开始的时候查询这个商品的redis的队列（队列先进先出原则），从这个队列取出值，取出成功的下单，取出失败的全部返回false。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li><p>准备好redis的环境，复现秒杀场景，开干，先建一个测试用的数据库和数据表：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建cc数据库</span></span><br><span class="line"> CREATE DATABASE cc;</span><br><span class="line"> <span class="comment">//创建以下数据表</span></span><br><span class="line"> SET FOREIGN_KEY_CHECKS=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Table structure <span class="keyword">for</span> errlog</span><br><span class="line"> -- ----------------------------</span><br><span class="line"> DROP TABLE IF EXISTS `errlog`;</span><br><span class="line"> CREATE TABLE `errlog` (</span><br><span class="line">   `log_id` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;错误日志id&#x27;</span>,</span><br><span class="line">   `error` text NOT <span class="literal">NULL</span> COMMENT <span class="string">&#x27;错误信息&#x27;</span>,</span><br><span class="line">   PRIMARY <span class="title function_ invoke__">KEY</span> (`log_id`)</span><br><span class="line"> ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT=<span class="string">&#x27;错误日志&#x27;</span>;</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Records of errlog</span><br><span class="line"> -- ----------------------------</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Table structure <span class="keyword">for</span> goods</span><br><span class="line"> -- ----------------------------</span><br><span class="line"> DROP TABLE IF EXISTS `goods`;</span><br><span class="line"> CREATE TABLE `goods` (</span><br><span class="line">   `goods_id` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;商品id&#x27;</span>,</span><br><span class="line">   `inventory` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> DEFAULT <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;库存&#x27;</span>,</span><br><span class="line">   PRIMARY <span class="title function_ invoke__">KEY</span> (`goods_id`)</span><br><span class="line"> ) ENGINE=InnoDB AUTO_INCREMENT=<span class="number">2</span> DEFAULT CHARSET=utf8mb4 COMMENT=<span class="string">&#x27;商品表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Records of goods</span><br><span class="line"> -- ----------------------------</span><br><span class="line"> INSERT INTO `goods` <span class="title function_ invoke__">VALUES</span> (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;10&#x27;</span>);</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Table structure <span class="keyword">for</span> orders</span><br><span class="line"> -- ----------------------------</span><br><span class="line"> DROP TABLE IF EXISTS `orders`;</span><br><span class="line"> CREATE TABLE `orders` (</span><br><span class="line">   `order_id` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;订单id&#x27;</span>,</span><br><span class="line">   `user_id` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> COMMENT <span class="string">&#x27;用户id&#x27;</span>,</span><br><span class="line">   PRIMARY <span class="title function_ invoke__">KEY</span> (`order_id`)</span><br><span class="line"> ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT=<span class="string">&#x27;订单表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Records of orders</span><br><span class="line"> -- ----------------------------</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Table structure <span class="keyword">for</span> userlog</span><br><span class="line"> -- ----------------------------</span><br><span class="line"> DROP TABLE IF EXISTS `userlog`;</span><br><span class="line"> CREATE TABLE `userlog` (</span><br><span class="line">   `logid` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;抢不到记录id&#x27;</span>,</span><br><span class="line">   `user_id` <span class="keyword">int</span>(<span class="number">10</span>) unsigned NOT <span class="literal">NULL</span> COMMENT <span class="string">&#x27;用户id&#x27;</span>,</span><br><span class="line">   PRIMARY <span class="title function_ invoke__">KEY</span> (`logid`)</span><br><span class="line"> ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT=<span class="string">&#x27;统计未抢到的用户&#x27;</span>;</span><br><span class="line"></span><br><span class="line"> -- ----------------------------</span><br><span class="line"> -- Records of userlog</span><br><span class="line"> -- ----------------------------</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这里是我写的一个秒杀的demo，在项目的根目录下创建一个叫redis.php 的文件，把以下代码复制进去：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RushBuy</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$redis</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$mysql</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">Redis</span>();</span><br><span class="line">        <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">6379</span>);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;redis = <span class="variable">$redis</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;mysql = <span class="title function_ invoke__">mysqli_connect</span>(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="string">&quot;root&quot;</span>, <span class="string">&quot;root&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">mysqli_select_db</span>(<span class="variable">$this</span>-&gt;mysql, <span class="string">&quot;cc&quot;</span>);</span><br><span class="line">        <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$this</span>-&gt;mysql, <span class="string">&quot;set names utf8&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//把商品添加到队列里面</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">GoodsAddRedis</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//写查询商品的逻辑</span></span><br><span class="line">            <span class="variable">$goods_id</span> = <span class="number">1</span>;</span><br><span class="line">            <span class="variable">$goods</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">GetGoods</span>(<span class="variable">$goods_id</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$goods</span>)) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="string">&#x27;商品&#x27;</span> . <span class="number">1</span> . <span class="string">&#x27;-不存在&#x27;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//获取这个商品的队列长度</span></span><br><span class="line">            <span class="variable">$list_count</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">llen</span>(<span class="string">&#x27;goods_id_&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//查询要上架商品的库存数量，并减去这个商品redis队列已有的数量。</span></span><br><span class="line">            <span class="variable">$count</span> = <span class="variable">$goods</span>-&gt;inventory - <span class="variable">$list_count</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//把剩余要补充到队列里的数量，使用循环插入到里面。</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$count</span>; <span class="variable">$i</span>++) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">lpush</span>(<span class="string">&#x27;goods_id_&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id, <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//返回队列的长度</span></span><br><span class="line">            <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">llen</span>(<span class="string">&#x27;goods_id_&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>());</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重点：Redis是单线程的，无论多少请求同时执行这个方法，是依次执行的，先进先出原则。</span></span><br><span class="line"><span class="comment">     * 模拟下单</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">AddOrder</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//模拟用户</span></span><br><span class="line">            <span class="variable">$user_id</span> = <span class="title function_ invoke__">mt_rand</span>(<span class="number">10</span>, <span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//查询商品信息</span></span><br><span class="line">            <span class="variable">$goods_id</span> = <span class="number">1</span>;</span><br><span class="line">            <span class="variable">$goods</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">GetGoods</span>(<span class="variable">$goods_id</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$goods</span>)) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="string">&#x27;商品&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id . <span class="string">&#x27;-不存在&#x27;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//从队列中移除一个值</span></span><br><span class="line">            <span class="variable">$num</span> = <span class="variable language_">$this</span>-&gt;redis-&gt;<span class="title function_ invoke__">lpop</span>(<span class="string">&#x27;goods_id_&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id);</span><br><span class="line">            <span class="comment">//判断这个值取出是否成功</span></span><br><span class="line">            <span class="keyword">if</span> (!<span class="variable">$num</span>) &#123;</span><br><span class="line">                <span class="comment">//这里为了展示方便，记录秒杀失败的用户</span></span><br><span class="line">                <span class="variable">$sql</span> = <span class="string">&quot;insert into userlog(user_id) values(&#x27;<span class="subst">$user_id</span>&#x27;)&quot;</span>;</span><br><span class="line">                <span class="variable">$log_add</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">Run</span>(<span class="variable">$sql</span>);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//秒杀失败直接返回false</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//添加订单</span></span><br><span class="line">                <span class="variable">$sql</span> = <span class="string">&quot;insert into orders(user_id) values(&#x27;<span class="subst">$user_id</span>&#x27;)&quot;</span>;</span><br><span class="line">                <span class="variable">$add_order</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">Run</span>(<span class="variable">$sql</span>);</span><br><span class="line">                <span class="keyword">if</span> (!<span class="variable">$add_order</span>) &#123;</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="string">&#x27;用户&#x27;</span> . <span class="variable">$user_id</span> . <span class="string">&#x27;-下单失败&#x27;</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//编辑商品库存</span></span><br><span class="line">                <span class="variable">$sql</span> = <span class="string">&quot;update goods set inventory=inventory-1 where goods_id=&#x27;<span class="subst">$goods_id</span>&#x27;&quot;</span>;</span><br><span class="line">                <span class="variable">$goods_edit</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">Run</span>(<span class="variable">$sql</span>, <span class="number">2</span>);</span><br><span class="line">                <span class="keyword">if</span> (!<span class="variable">$goods_edit</span>) &#123;</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="string">&#x27;商品&#x27;</span> . <span class="variable">$goods</span>-&gt;goods_id . <span class="string">&#x27;已抢购完了&#x27;</span>);</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//抢购成功返回true</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">ErrLog</span>(<span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>());</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//错误日志写入</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">ErrLog</span>(<span class="params"><span class="variable">$log</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&quot;insert into errlog(error) values(&#x27;<span class="subst">$log</span>&#x27;)&quot;</span>;</span><br><span class="line">        <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$this</span>-&gt;mysql, <span class="variable">$sql</span>);</span><br><span class="line">        <span class="variable">$log_add</span> = <span class="title function_ invoke__">mysqli_affected_rows</span>(<span class="variable">$this</span>-&gt;mysql);</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$log_add</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//获取一条商品数据</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">GetGoods</span>(<span class="params"><span class="variable">$goods_id</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&quot;select * from goods where goods_id=&#x27;<span class="subst">$goods_id</span>&#x27;&quot;</span>;</span><br><span class="line">        <span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$this</span>-&gt;mysql, <span class="variable">$sql</span>);</span><br><span class="line">        <span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_fetch_object</span>(<span class="variable">$row</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$row</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//数据库操作 </span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">Run</span>(<span class="params"><span class="variable">$sql</span>, <span class="variable">$type</span> = <span class="number">1</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="title function_ invoke__">mysqli_query</span>(<span class="variable">$this</span>-&gt;mysql, <span class="variable">$sql</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$type</span> == <span class="number">1</span>) &#123;<span class="comment">//添加 获取新增id</span></span><br><span class="line">            <span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_insert_id</span>(<span class="variable">$this</span>-&gt;mysql);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;<span class="comment">//编辑 获取影响行数</span></span><br><span class="line">            <span class="variable">$row</span> = <span class="title function_ invoke__">mysqli_affected_rows</span>(<span class="variable">$this</span>-&gt;mysql);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$row</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>RushBuy这个类里面写了很多注释，跟着注释走这个逻辑，主要功能的话是商品加入队列和模拟用户秒杀，下面是把商品加入队列的操作，在项目的根目录创建一个goodsadd.php，复制以下代码:</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require_once</span> <span class="string">&quot;./redis.php&quot;</span>;</span><br><span class="line"><span class="comment">//实例化封装好的类库</span></span><br><span class="line"><span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">RushBuy</span>();</span><br><span class="line"><span class="comment">//把商品添加进队列</span></span><br><span class="line"><span class="variable">$add</span> = <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">GoodsAddRedis</span>();</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="variable">$add</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在项目的根目录创建一个秒杀用的入口orderadd.php，复制以下代码：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">   <span class="keyword">require_once</span> <span class="string">&quot;./redis.php&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="variable">$redis</span> = <span class="keyword">new</span> <span class="title class_">RushBuy</span>();</span><br><span class="line">   <span class="comment">//模拟秒杀</span></span><br><span class="line">   <span class="variable">$add</span> = <span class="variable">$redis</span>-&gt;<span class="title function_ invoke__">AddOrder</span>();</span><br><span class="line">   <span class="title function_ invoke__">var_dump</span>(<span class="variable">$add</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>环境和内容都准备好了，下面进行用户的模拟秒杀测试，其实本质上就是进行压力测试，先访问goodsadd.php，进行商品的库存加入队列（这里会得到10个长度，库存数据默认给了10），然后开始准备压力测试模拟用户秒杀。</p>
+</li>
+<li><p>压力测试的话，我这里使用的是apache自带的ab测试（因为方便），在Apache的bin目录下执行以下类似的命令：</p>
+ <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#压力测试地址一定要根据自己实际地址填写 不要光复制</span></span><br><span class="line">ab -n <span class="number">500</span> -c <span class="number">500</span> http:<span class="comment">//127.0.0.1/redis/orderadd.php</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最终得到测试结果:</p>
+<p> <img src="/../../images/article/php/redis-list-1.png"></p>
+</li>
+<li><p>数据库的记录结果：</p>
+<p> <img src="/../../images/article/php/redis-list-2.png"></p>
+</li>
+<li><p>从数据库结果来看500人抢购10个库存（在数据表结构上有默认添加一条数据）也没有出现商品的库存超卖问题，里面没有满500个的原因，有个别请求失败了。</p>
+</li>
+<li><p>到这里模拟用户秒杀的简单场景就结束了，这里只是一个简单的demo，没有考虑复杂场景，仅供参考，有兴趣的话，可以了解一下缓存雪崩，缓存穿透，缓存击穿等问题。</p>
+</li>
+</ol>
+</div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "https://loser-zzz.github.io/2023/11/29/PHP/redis%E9%98%9F%E5%88%97%E7%A7%92%E6%9D%80%E5%8E%9F%E7%90%86/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "https://loser-zzz.github.io/2023/11/29/PHP/redis%E9%98%9F%E5%88%97%E7%A7%92%E6%9D%80%E5%8E%9F%E7%90%86/";
+            const title         = "「redis队列秒杀原理」";
+            const excerpt       = `redis队列秒杀原理引言  在商品秒杀等场景中，使用普通的方法处理的话，容易出现以下问题：    - 高并发下的流量冲击数据库    - 商品容易出现库存超卖问题  秒杀的大致逻辑：秒杀前，商品上架的时候，将库存添加到redis的队...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/PHP/" rel="tag">PHP</a>, <a class="tag-none-link" href="/tags/redis/" rel="tag">redis</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2023-11-29T15:02:04.851Z" itemprop="dateModified">最后编辑：2023-11-29</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" swoole简单的推送demo" href="/2023/11/29/PHP/swoole简单的推送demo/">&lt; 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" php中简单的使用redis发布与订阅" href="/2023/11/29/PHP/php中简单的使用redis发布与订阅/">下一篇 &gt;</a>
+            </div>
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="../images/logo.jpg" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center"></p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                44
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                6
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                25
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Centos/">Centos</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MYSQL/">MYSQL</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">10</span></li></ul>
+  </aside>
+
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/Centos/" style="font-size: 0.75em;">Centos</a> <a href="/tags/ElasticSearch/" style="font-size: 0.65em;">ElasticSearch</a> <a href="/tags/Hexo/" style="font-size: 0.6em;">Hexo</a> <a href="/tags/JMeter/" style="font-size: 0.65em;">JMeter</a> <a href="/tags/Laravel/" style="font-size: 0.7em;">Laravel</a> <a href="/tags/Nginx/" style="font-size: 0.6em;">Nginx</a> <a href="/tags/PHP/" style="font-size: 0.8em;">PHP</a> <a href="/tags/PHPUnit/" style="font-size: 0.6em;">PHPUnit</a> <a href="/tags/ThinkPHP/" style="font-size: 0.6em;">ThinkPHP</a> <a href="/tags/ab/" style="font-size: 0.6em;">ab</a> <a href="/tags/apache/" style="font-size: 0.6em;">apache</a> <a href="/tags/docker/" style="font-size: 0.6em;">docker</a> <a href="/tags/ffmpeg/" style="font-size: 0.6em;">ffmpeg</a> <a href="/tags/git/" style="font-size: 0.7em;">git</a> <a href="/tags/github/" style="font-size: 0.6em;">github</a> <a href="/tags/jenkins/" style="font-size: 0.6em;">jenkins</a> <a href="/tags/laradock/" style="font-size: 0.6em;">laradock</a> <a href="/tags/laravel/" style="font-size: 0.65em;">laravel</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/30/MYSQL/%E4%BB%80%E4%B9%88%E5%8F%ABMYSQl%E4%BA%8B%E5%8A%A1%E4%BB%A5%E5%8F%8A%E7%89%B9%E6%80%A7/"><i class="fa  fa-book"></i> 什么叫MYSQl事务以及特性</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/30/PHP/PHP%E4%BD%BF%E7%94%A8ffmpeg%E6%88%AA%E5%8F%96%E8%A7%86%E9%A2%91%E7%AC%AC%E4%B8%80%E5%B8%A7%E5%81%9A%E5%B0%81%E9%9D%A2/"><i class="fa  fa-book"></i> PHP使用ffmpeg截取视频第一帧做封面</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/30/PHP/php%E9%AA%8C%E8%AF%81%E4%B8%8A%E4%BC%A0%E7%9A%84%E5%9B%BE%E7%89%87%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB%E4%B8%9C%E8%A5%BF/"><i class="fa  fa-book"></i> php验证上传的图片是否包含东西</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/30/PHP/%E5%85%B3%E4%BA%8Elaravel%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E9%94%99%E8%AF%AF/"><i class="fa  fa-book"></i> 关于laravel日志文件权限错误</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2023/11/30/%E6%9D%82%E9%A1%B9/laravel%E5%9C%A8Windows%20%E7%B3%BB%E7%BB%9F%E4%B8%8Blaradock%E8%BF%90%E8%A1%8C%E5%93%8D%E5%BA%94%E5%BB%B6%E6%97%B6%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"><i class="fa  fa-book"></i> laravel在Windows系统下laradock运行响应延时解决方案</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  class="ap-lrc"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <!-- Keep for compatibility -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- New links -->
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2023 生命是一场无法回放的电影 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by Liao.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <meting-js
+        server="netease"
+        type="playlist"
+        id="3204190542"
+        order="random"
+        fixed="true"
+    >
+    </meting-js>
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    </body>
+</html>
